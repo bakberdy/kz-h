@@ -38,8 +38,12 @@ dependencies:
   get_it: ^8.0.2
   flutter_screenutil: ^5.9.3
   google_fonts: ^6.2.1
+  auto_route: ^9.2.2
+  flutter_svg: ^2.0.16
 
 dev_dependencies:
+  auto_route_generator:
+  build_runner:
   flutter_test:
     sdk: flutter
 
@@ -91,3 +95,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  assets:
+    - lib/assets/icons/bottom_nav_bar_home.svg
+    - lib/assets/icons/bottom_nav_bar_profile.svg
+
