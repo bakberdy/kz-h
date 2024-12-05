@@ -1,8 +1,13 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
+import 'package:kz_h/src/features/home_feed/domain/entities/topic.dart';
+import 'package:kz_h/src/features/home_feed/presentation/blocs/question/question_bloc.dart';
 import 'package:kz_h/src/features/home_feed/presentation/screens/mistakes.dart';
+
+import '../../domain/entities/question.dart';
 
 @RoutePage()
 class HomeFeed extends StatefulWidget {
@@ -13,44 +18,6 @@ class HomeFeed extends StatefulWidget {
 }
 
 class _HomeFeedState extends State<HomeFeed> {
-  final questions = [
-    {
-      'topic': "Казахское ханство",
-      'question': "В каком году зародилась казахское ханство?",
-      'variants': [
-        "В 1465",
-        "В 1475",
-        "В 1765",
-        "В 1415",
-        "В 1455",
-        "В 1445",
-      ]
-    },
-    {
-      'topic': "Казахское ханство",
-      'question': "В каком году зародилась казахское ханство?",
-      'variants': [
-        "В 1465",
-        "В 1475",
-        "В 1765",
-        "В 1415",
-        "В 1455",
-        "В 1445",
-      ]
-    },
-    {
-      'topic': "Казахское ханство",
-      'question': "В каком году зародилась казахское ханство?",
-      'variants': [
-        "В 1465",
-        "В 1475",
-        "В 1765",
-        "В 1415",
-        "В 1455",
-        "В 1445",
-      ]
-    }
-  ];
   final homePageAndMistakePageController = PageController();
   int currentIndexOfPage = 0;
 
@@ -58,6 +25,13 @@ class _HomeFeedState extends State<HomeFeed> {
     setState(() {
       currentIndexOfPage = index;
     });
+  }
+
+  @override
+  void initState() {
+    context.read<QuestionBloc>().add(GetQuestionRequested());
+    // TODO: implement initState
+    super.initState();
   }
 
   void _onAppBarTapped(int index) {
@@ -141,9 +115,16 @@ class _HomeFeedState extends State<HomeFeed> {
           controller: homePageAndMistakePageController,
           scrollDirection: Axis.horizontal,
           children: [
-            HomeFeedBody(
-              questions: questions,
-                themeData: themeData, alphabetLetters: alphabetLetters),
+            BlocBuilder<QuestionBloc, QuestionState>(
+              builder: (context, state) {
+                if(state is QuestionLoaded){
+                  return HomeFeedBody(
+                  questions: state.questions,
+                    themeData: themeData, alphabetLetters: alphabetLetters);
+                }
+                return const SizedBox();
+              }
+            ),
             const MistakesPage()
           ],
         ));
@@ -159,7 +140,7 @@ class HomeFeedBody extends StatefulWidget {
 
   final ThemeData themeData;
   final List<String> alphabetLetters;
-  final List questions;
+  final List<Question> questions;
 
   @override
   State<HomeFeedBody> createState() => _HomeFeedBodyState();
@@ -188,7 +169,7 @@ class _HomeFeedBodyState extends State<HomeFeedBody>  with AutomaticKeepAliveCli
                 style: widget.themeData.textTheme.labelSmall,
               ),
               Text(
-                question['topic'],
+                question.topicIds[0].topicName,
                 style: widget.themeData.textTheme.headlineSmall,
               ),
               SizedBox(
@@ -211,7 +192,7 @@ class _HomeFeedBodyState extends State<HomeFeedBody>  with AutomaticKeepAliveCli
                       children: [
                         Text(
                             style: widget.themeData.textTheme.bodyMedium,
-                            question['question'],)
+                            question.question,)
                       ],
                     ),
                     SizedBox(
@@ -219,24 +200,25 @@ class _HomeFeedBodyState extends State<HomeFeedBody>  with AutomaticKeepAliveCli
                     ),
                     ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: question['variants'].length,
+                        itemCount: question.variants.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           return Column(children: [
                             Container(
-                              alignment: Alignment.center,
-                              height: 38.h,
+                              alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.all(5),
+                              height: 45.h,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(4.r),
                                   border: Border.all(
                                       color: Color(0xff4A4A4A), width: 1)),
                               child: Text(
-                                "${widget.alphabetLetters[index]}) ${question['variants'][index]}",
+                                "${widget.alphabetLetters[index]}) ${question.variants[index].text}",
                                 style: widget.themeData.textTheme.bodySmall,
                               ),
                             ),
                             SizedBox(
-                              height: 10.h,
+                              height: 15.h,
                             )
                           ]);
                         }),

@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:kz_h/injection_container.dart' as di;
 import 'package:kz_h/src/core/routes/app_router.dart';
-import 'package:kz_h/src/core/themes/colors.dart';
 import 'package:kz_h/src/core/themes/themes.dart';
-import 'package:kz_h/src/features/home_feed/presentation/screens/home_feed.dart';
+import 'package:kz_h/src/features/home_feed/presentation/blocs/question/question_bloc.dart';
 
 void main() {
-  final appRouter = AppRouter();
-  runApp(MyApp(appRouter: appRouter));
+  WidgetsFlutterBinding.ensureInitialized();
+  di.initDependencies();
+  runApp(MultiBlocProvider(
+      providers: [BlocProvider(create: (_) => di.sl<QuestionBloc>())],
+      child: MyApp(appRouter: di.sl<AppRouter>())));
 }
 
 class MyApp extends StatelessWidget {
