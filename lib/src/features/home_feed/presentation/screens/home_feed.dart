@@ -165,99 +165,99 @@ class HomeFeedBody extends StatefulWidget {
   State<HomeFeedBody> createState() => _HomeFeedBodyState();
 }
 
-class _HomeFeedBodyState extends State<HomeFeedBody> {
+class _HomeFeedBodyState extends State<HomeFeedBody>  with AutomaticKeepAliveClientMixin{
   final questionPageController = PageController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: PageView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: widget.questions.length,
-          itemBuilder: (BuildContext context, int index) {
-            final question = widget.questions[index];
-            return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 34.w),
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 40.h,
-                ),
-                Text(
-                  "Тема:",
-                  style: widget.themeData.textTheme.labelSmall,
-                ),
-                Text(
-                  question['topic'],
-                  style: widget.themeData.textTheme.headlineSmall,
-                ),
-                SizedBox(
-                  height: 30.h,
-                ),
-                Container(
-                  padding: EdgeInsets.only(
-                      top: 24.h, right: 20.w, left: 20.w, bottom: 5.h),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 1,
-                        color: Color(0xff4A4A4A),
-                      ),
-                      borderRadius: BorderRadius.circular(4.r)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Wrap(
-                        children: [
-                          Text(
-                              style: widget.themeData.textTheme.bodyMedium,
-                              question['question'],)
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20.h,
-                      ),
-                      ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: question['variants'].length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return Column(children: [
-                              Container(
-                                alignment: Alignment.center,
-                                height: 38.h,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4.r),
-                                    border: Border.all(
-                                        color: Color(0xff4A4A4A), width: 1)),
-                                child: Text(
-                                  "${widget.alphabetLetters[index]}) ${question['variants'][index]}",
-                                  style: widget.themeData.textTheme.bodySmall,
-                                ),
+    return SafeArea(
+      child: PageView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: widget.questions.length,
+        itemBuilder: (BuildContext context, int index) {
+          final question = widget.questions[index];
+          return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 34.w),
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: 40.h,
+              ),
+              Text(
+                "Тема:",
+                style: widget.themeData.textTheme.labelSmall,
+              ),
+              Text(
+                question['topic'],
+                style: widget.themeData.textTheme.headlineSmall,
+              ),
+              SizedBox(
+                height: 30.h,
+              ),
+              Container(
+                padding: EdgeInsets.only(
+                    top: 24.h, right: 20.w, left: 20.w, bottom: 5.h),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 1,
+                      color: Color(0xff4A4A4A),
+                    ),
+                    borderRadius: BorderRadius.circular(4.r)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Wrap(
+                      children: [
+                        Text(
+                            style: widget.themeData.textTheme.bodyMedium,
+                            question['question'],)
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: question['variants'].length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return Column(children: [
+                            Container(
+                              alignment: Alignment.center,
+                              height: 38.h,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4.r),
+                                  border: Border.all(
+                                      color: Color(0xff4A4A4A), width: 1)),
+                              child: Text(
+                                "${widget.alphabetLetters[index]}) ${question['variants'][index]}",
+                                style: widget.themeData.textTheme.bodySmall,
                               ),
-                              SizedBox(
-                                height: 10.h,
-                              )
-                            ]);
-                          }),
-                    ],
-                  ),
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            )
+                          ]);
+                        }),
+                  ],
                 ),
-                SizedBox(
-                  height: 12.h,
-                ),
-                Text(
-                  'Не знаю ответ',
-                  style: widget.themeData.textTheme.labelSmall,
-                )
-              ],
-            ),
-          );
-          },
-
-        ),
+              ),
+              SizedBox(
+                height: 12.h,
+              ),
+              Text(
+                'Не знаю ответ',
+                style: widget.themeData.textTheme.labelSmall,
+              )
+            ],
+          ),
+        );
+        },
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

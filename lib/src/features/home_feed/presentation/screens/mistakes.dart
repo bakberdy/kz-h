@@ -11,8 +11,8 @@ class MistakesPage extends StatefulWidget {
 class _MistakesPageState extends State<MistakesPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Mistakes'),),
+    return Container(
+      child: AppBar(title: Text('Mistakes'),),
     );
   }
 }
