@@ -5,7 +5,7 @@ import 'package:kz_h/src/features/home_feed/presentation/widgets/variant_widget.
 import '../../../../../injection_container.dart' as di;
 import '../../domain/entities/question.dart';
 import '../blocs/variant/variant_bloc.dart';
-import '../screens/home_feed.dart';
+import '../screens/test_scrolling_page.dart';
 
 class VariantsBar extends StatelessWidget {
   const VariantsBar({

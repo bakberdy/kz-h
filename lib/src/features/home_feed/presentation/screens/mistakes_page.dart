@@ -12,7 +12,13 @@ class _MistakesPageState extends State<MistakesPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: AppBar(title: Text('Mistakes'),),
+      color: Colors.black,
+      child: AppBar(
+        title: const Text(
+          'Mistakes',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
     );
   }
 }

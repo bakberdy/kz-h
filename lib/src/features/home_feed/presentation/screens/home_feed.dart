@@ -4,11 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kz_h/src/features/home_feed/presentation/blocs/home_screen_pages/home_screen_pages_cubit.dart';
 import 'package:kz_h/src/features/home_feed/presentation/blocs/question/question_bloc.dart';
-import 'package:kz_h/src/features/home_feed/presentation/screens/mistakes.dart';
+import 'package:kz_h/src/features/home_feed/presentation/screens/mistakes_page.dart';
+import 'package:kz_h/src/features/home_feed/presentation/screens/test_scrolling_page.dart';
 
-import '../../domain/entities/question.dart';
 import '../widgets/home_app_bar_widget.dart';
-import '../widgets/variants_bar.dart';
 
 @RoutePage()
 class HomeFeed extends StatefulWidget {
