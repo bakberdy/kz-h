@@ -7,7 +7,9 @@ import 'package:kz_h/src/features/home_feed/data/data_sources/question_remote_da
 import 'package:kz_h/src/features/home_feed/data/repositories/question_repository%20implementation.dart';
 import 'package:kz_h/src/features/home_feed/domain/repositories/questions_repository.dart';
 import 'package:kz_h/src/features/home_feed/domain/usecases/get_questions.dart';
+import 'package:kz_h/src/features/home_feed/presentation/blocs/home_screen_pages/home_screen_pages_cubit.dart';
 import 'package:kz_h/src/features/home_feed/presentation/blocs/question/question_bloc.dart';
+import 'package:kz_h/src/features/home_feed/presentation/blocs/variant/variant_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -30,5 +32,7 @@ Future<void> initHomeDi() async {
 
   // Presentation Layer
   sl.registerFactory(() => QuestionBloc(getQuestions: sl()));
+  sl.registerFactory(()=> HomeScreenPagesCubit());
+  sl.registerFactory(()=> VariantBloc());
 }
 
