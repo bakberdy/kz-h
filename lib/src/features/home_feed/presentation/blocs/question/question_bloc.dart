@@ -25,8 +25,14 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
         }else{
           errorMessage = "Unknown error occurred";
         }
-        emit(QuestionError(errorMessage));
       }, (questions) {
+        if (state is QuestionLoaded) {
+          final currentQuestions = (state as QuestionLoaded).questions;
+          final List<Question> updatedQuestions = List.from(currentQuestions)..addAll(questions);
+          emit(QuestionLoaded(questions: updatedQuestions));
+        } else {
+          emit(QuestionLoaded(questions: questions));
+        }
         emit(QuestionLoaded(questions: questions));
       });
     });

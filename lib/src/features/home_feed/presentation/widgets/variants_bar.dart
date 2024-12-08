@@ -8,7 +8,7 @@ import '../blocs/variant/variant_bloc.dart';
 import '../screens/test_scrolling_page.dart';
 
 class VariantsBar extends StatelessWidget {
-  const VariantsBar({
+  VariantsBar({
     super.key,
     required this.question,
     required this.widget,
@@ -16,6 +16,17 @@ class VariantsBar extends StatelessWidget {
 
   final Question question;
   final TestScrollingPage widget;
+  final alphabetLetters = [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+    ];
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +41,7 @@ class VariantsBar extends StatelessWidget {
           return VariantWidget(
             themeData: widget.themeData,
             variant: variant,
-            letterIndex: widget.alphabetLetters[index],
+            letterIndex: alphabetLetters[index],
             onTap: () {
               context.read<VariantBloc>().add(
                   VariantTappedRequested(

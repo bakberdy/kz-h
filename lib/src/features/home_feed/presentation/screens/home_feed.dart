@@ -20,25 +20,9 @@ class HomeFeed extends StatefulWidget {
 class _HomeFeedState extends State<HomeFeed> {
   final PageController _homePageAndMistakePageController = PageController();
 
-  @override
-  void initState() {
-    context.read<QuestionBloc>().add(GetQuestionRequested());
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
-    const alphabetLetters = [
-      "A",
-      "B",
-      "C",
-      "D",
-      "E",
-      "F",
-      "G",
-      "H",
-      "I",
-    ];
 
     final themeData = Theme.of(context);
     return SafeArea(
@@ -59,18 +43,9 @@ class _HomeFeedState extends State<HomeFeed> {
           controller: _homePageAndMistakePageController,
           onPageChanged: _onPageChanged,
           children: [
-            BlocBuilder<QuestionBloc, QuestionState>(
-              builder: (context, state) {
-                if (state is QuestionLoaded) {
-                  return TestScrollingPage(
-                    questions: state.questions,
+           TestScrollingPage(
                     themeData: themeData,
-                    alphabetLetters: alphabetLetters,
-                  );
-                }
-                return const SizedBox();
-              },
-            ),
+                  ),
             const MistakesPage(),
           ],
         ),
