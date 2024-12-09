@@ -7,6 +7,11 @@ import 'colors.dart';
 final appTheme = ThemeData(
                 scaffoldBackgroundColor: AppColors.darkBgColor,
                 textTheme: TextTheme(
+                  headlineMedium: GoogleFonts.inter(
+                      textStyle: TextStyle(
+                          fontSize: 24.sp,
+                          color: AppColors.primaryTextColor,
+                          fontWeight: FontWeight.w400)),
                   headlineSmall: GoogleFonts.inter(
                       textStyle: TextStyle(
                           fontSize: 20.sp,

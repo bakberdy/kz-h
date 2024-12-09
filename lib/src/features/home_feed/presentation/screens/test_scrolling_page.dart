@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
 
-import '../../domain/entities/question.dart';
 import '../blocs/question/question_bloc.dart';
 import '../widgets/variants_bar.dart';
 

@@ -103,5 +103,13 @@ flutter:
   assets:
     - lib/assets/icons/bottom_nav_bar_home.svg
     - lib/assets/icons/bottom_nav_bar_profile.svg
+    - lib/assets/icons/
     - lib/src/features/home_feed/data/data_sources/sample_data.json
+    - lib/assets/images/aaa.jpg
+    - lib/assets/images/KZH-logo.png
+    - lib/assets/icons/accuracy.svg
+    - lib/assets/icons/fire.svg
+    - lib/assets/icons/quiz.svg
+    - lib/assets/icons/score.svg
+    - lib/assets/icons/settings.png
 
