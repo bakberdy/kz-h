@@ -8,6 +8,7 @@ class Assets {
   static const String assetsIconsFire = 'lib/assets/icons/fire.svg';
   static const String assetsIconsQuiz = 'lib/assets/icons/quiz.svg';
   static const String assetsIconsScore = 'lib/assets/icons/score.svg';
+  static const String assetsIconsSettings = 'lib/assets/icons/settings.png';
   static const String assetsImagesAaa = 'lib/assets/images/aaa.jpg';
   static const String assetsImagesKZHLogo = 'lib/assets/images/KZH-logo.png';
   static const String dataDataSourcesSampleData = 'lib/src/features/home_feed/data/data_sources/sample_data.json';
@@ -46,7 +47,6 @@ class Assets {
   static const String repositoriesQuestionsRepository = 'lib/src/features/home_feed/domain/repositories/questions_repository.dart';
   static const String repositoriesUserRepository = 'lib/src/core/repositories/user_repository.dart';
   static const String routesAppRouter = 'lib/src/core/routes/app_router.dart';
-  static const String routesAppRouter.gr = 'lib/src/core/routes/app_router.gr.dart';
   static const String screensBottomNavigationBar = 'lib/src/features/bottom_navigation/presentation/screens/bottom_navigation_bar.dart';
   static const String screensHomeFeed = 'lib/src/features/home_feed/presentation/screens/home_feed.dart';
   static const String screensMistakesPage = 'lib/src/features/home_feed/presentation/screens/mistakes_page.dart';
@@ -61,6 +61,7 @@ class Assets {
   static const String variantVariantState = 'lib/src/features/home_feed/presentation/blocs/variant/variant_state.dart';
   static const String widgetsBottomNavigationBarWidget = 'lib/src/features/bottom_navigation/presentation/widgets/bottom_navigation_bar_widget.dart';
   static const String widgetsHomeAppBarWidget = 'lib/src/features/home_feed/presentation/widgets/home_app_bar_widget.dart';
+  static const String widgetsSvgIcon = 'lib/src/core/widgets/svg_icon.dart';
   static const String widgetsVariantWidget = 'lib/src/features/home_feed/presentation/widgets/variant_widget.dart';
   static const String widgetsVariantsBar = 'lib/src/features/home_feed/presentation/widgets/variants_bar.dart';
 
