@@ -19,7 +19,7 @@ class QuestionRemoteDataSourceImpl implements QuestionRemoteDataSource {
         .loadString('lib/src/features/home_feed/data/data_sources/sample_data.json');
     final Map<String, dynamic> data = json.decode(response);
 
-    final questions = (data['content'] as List)
+    final questions = (a as List)
         .map((item) => QuestionModel.fromJson(item))
         .toList();
     await Future.delayed(const Duration(seconds: 2));
