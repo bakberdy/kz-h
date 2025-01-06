@@ -17,9 +17,8 @@ class QuestionRepositoryImpl implements QuestionRepository {
       {required this.networkInfo, required this.questionRemoteDataSource});
 
   @override
-  Future<Either<Failure, List<Question>>> getQuestions() async {
-    // if (await networkInfo.isConnected) {
-    if (true) {
+  Future<Either<Failure, List<Question>>> getQuestions(int params) async {
+    if (await networkInfo.isConnected) {
       try {
         final List<QuestionModel> questions =
             await questionRemoteDataSource.getQuestions();

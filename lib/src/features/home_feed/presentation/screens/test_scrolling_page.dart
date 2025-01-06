@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
-
-import '../blocs/question/question_bloc.dart';
-import '../widgets/variants_bar.dart';
+import 'package:kz_h/src/features/home_feed/presentation/blocs/question/question_bloc.dart';
+import 'package:kz_h/src/features/home_feed/presentation/widgets/question_widget.dart';
 
 class TestScrollingPage extends StatefulWidget {
   const TestScrollingPage({
@@ -19,98 +17,123 @@ class TestScrollingPage extends StatefulWidget {
   State<TestScrollingPage> createState() => _TestScrollingPageState();
 }
 
-class _TestScrollingPageState extends State<TestScrollingPage>
-    with AutomaticKeepAliveClientMixin {
-  final questionPageController = PageController();
-  int pageIndex = 0;
+class _TestScrollingPageState extends State<TestScrollingPage> with AutomaticKeepAliveClientMixin {
+  final PageController _pageController = PageController();
+  int _currentPageIndex = 0;
+  double _overscrollOffset = 0.0;
+
   @override
   void initState() {
-    context.read<QuestionBloc>().add(GetQuestionRequested(pageIndex: pageIndex));
-    // TODO: implement initState
     super.initState();
+    _fetchQuestions();
+  }
+
+  void _fetchQuestions() {
+    context.read<QuestionBloc>().add(GetQuestionRequested(pageIndex: _currentPageIndex));
+  }
+
+  void _loadNextPage() {
+    setState(() {
+      _currentPageIndex++;
+    });
+    _fetchQuestions();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return BlocBuilder<QuestionBloc, QuestionState>(builder: (context, state) {
-      if (state is QuestionLoading) {
-        return Center(
-          child: CircularProgressIndicator(
-            color: AppColors.bluePurpleColor,
+    return BlocConsumer<QuestionBloc, QuestionState>(
+      listener: (context, state) {
+        if (state is QuestionLoaded) {
+          setState(() {
+            _overscrollOffset = 0.0;
+          });
+        }
+      },
+      builder: (context, state) {
+        if (state is QuestionLoading && _currentPageIndex == 0) {
+          return _buildLoadingIndicator();
+        }
+
+        if (state is QuestionLoaded || state is NextPageLoading) {
+          return _buildScrollableView(state);
+        }
+
+        return const SizedBox();
+      },
+    );
+  }
+
+  Widget _buildLoadingIndicator() {
+    return Center(
+      child: CircularProgressIndicator(
+        strokeWidth: 3,
+        color: AppColors.bluePurpleColor,
+        backgroundColor: Colors.transparent,
+      ),
+    );
+  }
+
+  Widget _buildScrollableView(QuestionState state) {
+    final questions = state is QuestionLoaded
+        ? state.questions
+        : (state as NextPageLoading).questions;
+
+    return NotificationListener<OverscrollNotification>(
+      onNotification: (OverscrollNotification overscroll) {
+        if (overscroll.overscroll > 0 &&
+            state is QuestionLoaded &&
+            _pageController.page == questions.length - 1) {
+          setState(() {
+            _overscrollOffset = overscroll.overscroll.clamp(0.0, 50.0); // Ограничиваем смещение
+          });
+
+          if (_overscrollOffset == 50.0) {
+            _loadNextPage();
+          }
+        }
+        return true;
+      },
+      child: Stack(
+        children: [
+          PageView.builder(
+            controller: _pageController,
+            scrollDirection: Axis.vertical,
+            itemCount: questions.length,
+            itemBuilder: (BuildContext context, int index) {
+              final question = questions[index];
+              return QuestionWidget(question: question);
+            },
           ),
-        );
-      }
-      if (state is QuestionLoaded) {
-        return PageView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: state.questions.length,
-          itemBuilder: (BuildContext context, int index) {
-            if(index == 3){
-              context.read<QuestionBloc>().add(GetQuestionRequested(pageIndex: ++pageIndex));
-            }
-            final question = state.questions[index];
-            return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 34.w),
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 60.h,
-                  ),
-                  Text(
-                    "Тема:",
-                    style: widget.themeData.textTheme.labelSmall,
-                  ),
-                  Text(
-                    question.topicIds[0].topicName,
-                    style: widget.themeData.textTheme.headlineSmall,
-                  ),
-                  SizedBox(
-                    height: 30.h,
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(
-                        top: 24.h, right: 20.w, left: 20.w, bottom: 5.h),
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 1,
-                          color: const Color(0xff4A4A4A),
-                        ),
-                        borderRadius: BorderRadius.circular(4.r)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Wrap(
-                          children: [
-                            Text(
-                              style: widget.themeData.textTheme.bodyMedium,
-                              question.question,
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        VariantsBar(question: question, widget: widget)
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 12.h,
-                  ),
-                  Text(
-                    'Не знаю ответ',
-                    style: widget.themeData.textTheme.labelSmall,
-                  )
-                ],
-              ),
-            );
-          },
-        );
-      }
-      return const SizedBox();
-    });
+          Positioned(
+            bottom: 20.h,
+            left: 0,
+            right: 0,
+            child: _buildPullIndicator(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPullIndicator() {
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 300),
+      opacity: _overscrollOffset > 0.0 ? 1.0 : 0.0,
+      child: Transform.translate(
+        offset: Offset(0, _overscrollOffset),
+        child: SizedBox(
+          height: 40.h,
+          child: Center(
+            child: CircularProgressIndicator(
+              color: AppColors.bluePurpleColor,
+              backgroundColor: Colors.transparent,
+              strokeWidth: 3.0,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
