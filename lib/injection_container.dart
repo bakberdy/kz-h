@@ -5,6 +5,6 @@ import 'package:kz_h/src/features/home_feed/home_feed_injection_container.dart';
 final sl = GetIt.instance;
 
 Future<void> initDependencies()async {
-  sl.registerSingleton<AppRouter>(AppRouter());
+  sl.registerSingleton<AppRouter>(AppRouter(isLoggedIn: true));
   await initHomeDi();
 }

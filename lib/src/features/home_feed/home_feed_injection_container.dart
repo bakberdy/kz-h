@@ -1,5 +1,4 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:data_connection_checker_tv/data_connection_checker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kz_h/src/core/network/network_info.dart';
 import 'package:kz_h/src/core/usecase/usecase.dart';

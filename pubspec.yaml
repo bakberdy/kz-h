@@ -42,7 +42,6 @@ dependencies:
   flutter_svg: ^2.0.16
   equatable: ^2.0.7
   dartz: ^0.10.1
-  data_connection_checker_tv: ^0.3.5-nullsafety
   flutter_bloc: ^8.1.6
   connectivity_plus: ^6.1.0
 
