@@ -13,7 +13,7 @@ import 'package:kz_h/src/features/bottom_navigation/presentation/screens/bottom_
     as _i1;
 import 'package:kz_h/src/features/home_feed/presentation/screens/home_feed.dart'
     as _i2;
-import 'package:kz_h/src/features/profile/presentation/screens/profile_page.dart'
+import 'package:kz_h/src/features/auth/presentation/screens/profile_page.dart'
     as _i3;
 
 /// generated route for

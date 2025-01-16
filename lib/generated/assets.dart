@@ -43,7 +43,7 @@ class Assets {
   static const String questionQuestionBloc = 'lib/src/features/home_feed/presentation/blocs/question/question_bloc.dart';
   static const String questionQuestionEvent = 'lib/src/features/home_feed/presentation/blocs/question/question_event.dart';
   static const String questionQuestionState = 'lib/src/features/home_feed/presentation/blocs/question/question_state.dart';
-  static const String repositoriesQuestionRepository implementation = 'lib/src/features/home_feed/data/repositories/question_repository implementation.dart';
+  static const String repositoriesQuestionRepositoryImpl = 'lib/src/features/home_feed/data/repositories/question_repository implementation.dart';
   static const String repositoriesQuestionsRepository = 'lib/src/features/home_feed/domain/repositories/questions_repository.dart';
   static const String repositoriesUserRepository = 'lib/src/core/repositories/user_repository.dart';
   static const String routesAppRouter = 'lib/src/core/routes/app_router.dart';

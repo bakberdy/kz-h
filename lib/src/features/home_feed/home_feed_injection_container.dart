@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:kz_h/src/core/network/network_info.dart';
 import 'package:kz_h/src/core/usecase/usecase.dart';
 import 'package:kz_h/src/features/home_feed/data/data_sources/question_remote_data_source.dart';
-import 'package:kz_h/src/features/home_feed/data/repositories/question_repository%20implementation.dart';
+import 'package:kz_h/src/features/home_feed/data/repositories/question_repository_impl.dart';
 import 'package:kz_h/src/features/home_feed/domain/repositories/questions_repository.dart';
 import 'package:kz_h/src/features/home_feed/domain/usecases/get_questions.dart';
 import 'package:kz_h/src/features/home_feed/presentation/blocs/home_screen_pages/home_screen_pages_cubit.dart';
