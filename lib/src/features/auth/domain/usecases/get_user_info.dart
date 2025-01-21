@@ -5,12 +5,12 @@ import 'package:kz_h/src/features/auth/domain/repositories/auth_repository.dart'
 
 import '../../../../core/error/failures.dart';
 
-class GetUserInfo implements UseCase<Either<Failure, User>, String>{
+class GetUserInfo implements UseCase<Either<Failure, User?>, NoParams>{
   final AuthRepository repository;
 
   GetUserInfo(this.repository);
   @override
-  Future<Either<Failure, User>> call({required String params}) {
-    return repository.getUserInfo(accessToken: params);
+  Future<Either<Failure, User?>> call({required NoParams params}) {
+    return repository.getUserInfo();
   }
 }

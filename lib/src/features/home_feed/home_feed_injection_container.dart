@@ -12,12 +12,8 @@ import 'package:kz_h/src/features/home_feed/presentation/blocs/variant/variant_b
 
 final sl = GetIt.instance;
 
-Future<void> initHomeDi() async {
-  // Core
-  sl.registerLazySingleton(() => Connectivity());
-  sl.registerSingleton<NetworkInfo>(
-      NetworkInfoImpl(connectionChecker: sl())); // NetworkInfo зависит от DataConnectionChecker
-
+void initHomeDi() {
+ 
   // Data Layer
   sl.registerLazySingleton<QuestionRemoteDataSource>(
       () => QuestionRemoteDataSourceImpl());
