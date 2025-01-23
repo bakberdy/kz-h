@@ -1,7 +1,7 @@
 import '../../domain/entities/variant.dart';
 
 class VariantModel extends Variant {
-  const VariantModel({required super.text, required super.correct});
+  const VariantModel({required super.text, super.correct});
 
   VariantModel copyWith({
     String? text,
@@ -16,7 +16,7 @@ class VariantModel extends Variant {
   factory VariantModel.fromJson(Map<String, dynamic> json) {
     return VariantModel(
       text: json['text'] as String,
-      correct: json['correct'] as bool,
+      correct: json['correct'] as bool?,
     );
   }
 

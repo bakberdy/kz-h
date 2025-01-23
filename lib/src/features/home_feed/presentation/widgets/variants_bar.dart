@@ -15,41 +15,40 @@ class VariantsBar extends StatelessWidget {
 
   final Question question;
   final alphabetLetters = [
-      "A",
-      "B",
-      "C",
-      "D",
-      "E",
-      "F",
-      "G",
-      "H",
-      "I",
-    ];
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+  ];
 
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    return BlocProvider(
-      create: (_) => di.sl<VariantBloc>(),
-      child: ListView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: question.variants.length,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          final variant = question.variants[index];
-          return VariantWidget(
-            themeData: themeData,
-            variant: variant,
-            letterIndex: alphabetLetters[index],
-            onTap: () {
-              context.read<VariantBloc>().add(
-                  VariantTappedRequested(
-                      correct: variant.correct,
-                      index: index));
-            }, index: index,
-          );
-        },
-      ),
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: question.variants.length,
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        final variant = question.variants[index];
+        return VariantWidget(
+          themeData: themeData,
+          variant: variant,
+          letterIndex: alphabetLetters[index],
+          onTap: () {
+            context.read<VariantBloc>().add(VariantTappedRequested(
+                correct: variant.correct,
+                index: index,
+                questionId: question.questionId,
+                selectedOption: variant.text));
+          },
+          index: index,
+        );
+      },
     );
   }
 }

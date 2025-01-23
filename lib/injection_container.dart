@@ -7,13 +7,14 @@ import 'package:kz_h/src/features/home_feed/home_feed_injection_container.dart';
 
 final sl = GetIt.instance;
 
-void initDependencies() {
+Future<void> initDependencies() async {
   sl.registerSingleton<AppRouter>(AppRouter());
    // Core
   sl.registerLazySingleton(() => Connectivity());
   sl.registerSingleton<NetworkInfo>(
       NetworkInfoImpl(connectionChecker: sl())); 
 
-  initHomeDi();
-  initAuthDi();
+  await initAuthDi();
+  await initHomeDi();
+  
 }

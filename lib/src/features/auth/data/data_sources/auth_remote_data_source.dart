@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:kz_h/src/core/error/exceptions.dart';
 import 'package:kz_h/src/features/auth/domain/entiities/auth_info.dart';
@@ -23,28 +25,58 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl({required this.dio});
 
   @override
-  Future<AuthInfo> login(
-      {required String emailOrUsername, required String password}) async {
+  Future<AuthInfo> login({
+    required String emailOrUsername,
+    required String password,
+  }) async {
     try {
-      final response = await dio.post('$URL/login', data: {
-        "emailOrUsername": emailOrUsername,
-        "password": password,
-      });
+      print('Login in data source');
+      final response = await dio.post(
+        '$URL/login',
+        data: {
+          "emailOrUsername": emailOrUsername,
+          "password": password,
+        },
+      );
 
-      if (response.statusCode == 200) {
-        final data = response.data as Map;
-        final String accessToken = data['access_token'];
-        final String refreshToken = data['refresh_token'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('HTTP 200: Success');
+        final data = response.data as Map<String, dynamic>;
 
-        if (accessToken.isNotEmpty && refreshToken.isNotEmpty) {
-          final authInfo =
-              AuthInfo(refreshToken: refreshToken, accessToken: accessToken);
-          return authInfo;
+        final accessToken = data['access_token'] as String?;
+        final refreshToken = data['refresh_token'] as String?;
+
+        if (accessToken != null &&
+            accessToken.isNotEmpty &&
+            refreshToken != null &&
+            refreshToken.isNotEmpty) {
+          return AuthInfo(
+            refreshToken: refreshToken,
+            accessToken: accessToken,
+          );
         } else {
-          throw AuthException('Access token is empty');
+          throw AuthException('Access token or refresh token is empty.');
         }
       } else {
-        throw ServerException('Unexpected status code: ${response.statusCode}');
+        throw ServerException(
+          'Unexpected status code: ${response.statusCode}, Response: ${response.data}',
+        );
+      }
+    } on DioException catch (dioError) {
+      if (dioError.response != null) {
+        final statusCode = dioError.response?.statusCode;
+        final errorData =
+            dioError.response?.data?['message'] ?? 'Unknown error';
+
+        if (statusCode == 404) {
+          throw ServerException('Resource not found: $errorData');
+        } else if (statusCode == 500) {
+          throw ServerException('Internal server error: $errorData');
+        } else {
+          throw ServerException('Error $statusCode: $errorData');
+        }
+      } else {
+        throw ServerException('Network error: ${dioError.message}');
       }
     } catch (e) {
       rethrow;
@@ -57,7 +89,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final response = await dio.post('$URL/refresh',
           options: Options(headers: {"Authorization": 'Bearer $refreshToken'}));
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data as Map;
         final String accessToken = data['access_token'];
 
@@ -69,28 +101,66 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       } else {
         throw ServerException('Unexpected status code: ${response.statusCode}');
       }
+    } on DioException catch (dioError) {
+      if (dioError.response != null) {
+        final statusCode = dioError.response?.statusCode;
+        final errorData =
+            dioError.response?.data?['message'] ?? 'Unknown error';
+
+        if (statusCode == 404) {
+          throw ServerException('Resource not found: $errorData');
+        } else if (statusCode == 500) {
+          throw ServerException('Internal server error: $errorData');
+        } else {
+          throw ServerException('Error $statusCode: $errorData');
+        }
+      } else {
+        throw ServerException('Network error: ${dioError.message}');
+      }
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<void> register(
-      {required String email,
-      required String username,
-      required String password,
-      required String confirmPassword}) async {
+  Future<void> register({
+    required String email,
+    required String username,
+    required String password,
+    required String confirmPassword,
+  }) async {
     try {
-      final response = await dio.post(URL + '/register', data: {
-        "username": username,
-        "password": password,
-        "confirm_password": confirmPassword,
-        "email": email
-      });
-      if (response.statusCode == 200) {
+      final response = await dio.post(
+        '$URL/register',
+        data: jsonEncode({
+          "username": username,
+          "password": password,
+          "confirm_password": confirmPassword,
+          "email": email,
+        }),
+        options: Options(headers: {"Content-Type": "application/json"}),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return;
       } else {
         throw ServerException('Unexpected status code: ${response.statusCode}');
+      }
+    } on DioException catch (dioError) {
+      if (dioError.response != null) {
+        final statusCode = dioError.response?.statusCode;
+        final errorData =
+            dioError.response?.data?['message'] ?? 'Unknown error';
+
+        if (statusCode == 404) {
+          throw ServerException('Resource not found: $errorData');
+        } else if (statusCode == 500) {
+          throw ServerException('Internal server error: $errorData');
+        } else {
+          throw ServerException('Error $statusCode: $errorData');
+        }
+      } else {
+        throw ServerException('Network error: ${dioError.message}');
       }
     } catch (e) {
       rethrow;
@@ -100,18 +170,41 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<User> getUserInfo({required String accessToken}) async {
     try {
-      final response = await dio.post('$URL/me',
-          options: Options(headers: {"Authorization": 'Bearer $accessToken'}));
+      final response = await dio.get(
+        '$URL/me',
+        options: Options(
+          headers: {
+            "Authorization": 'Bearer $accessToken',
+          },
+        ),
+      );
 
-      if (response.statusCode == 200) {
-        final data = response.data as Map;
-        final User user = User.fromJson(data as Map<String, dynamic>);
-
-        return user;
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = response.data as Map<String, dynamic>;
+        return User.fromJson(data);
       } else {
-        throw ServerException('Unexpected status code: ${response.statusCode}');
+        throw ServerException(
+          'Unexpected status code: ${response.statusCode}, Response: ${response.data}',
+        );
+      }
+    } on DioException catch (dioError) {
+      if (dioError.response != null) {
+        final statusCode = dioError.response?.statusCode;
+        final errorData =
+            dioError.response?.data?['message'] ?? 'Unknown error';
+
+        if (statusCode == 404) {
+          throw ServerException('Resource not found: $errorData');
+        } else if (statusCode == 500) {
+          throw ServerException('Internal server error: $errorData');
+        } else {
+          throw ServerException('Error $statusCode: $errorData');
+        }
+      } else {
+        throw ServerException('Network error: ${dioError.message}');
       }
     } catch (e) {
+      print('Error in getUserInfo: $e');
       rethrow;
     }
   }

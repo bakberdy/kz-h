@@ -2,14 +2,16 @@ import 'package:equatable/equatable.dart';
 import 'package:kz_h/src/features/home_feed/domain/entities/topic.dart';
 import 'package:kz_h/src/features/home_feed/domain/entities/variant.dart';
 
-class Question extends Equatable{
+class Question extends Equatable {
   final String questionId;
   final String question;
   final List<TopicIds> topicIds;
   final List<Variant> variants;
+  final String? topicName;
 
   const Question(
-      {required this.questionId,
+      {this.topicName,
+      required this.questionId,
       required this.question,
       required this.topicIds,
       required this.variants});

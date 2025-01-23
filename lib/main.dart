@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,8 +15,7 @@ void main() {
   runApp(MultiBlocProvider(providers: [
     BlocProvider(create: (_) => di.sl<QuestionBloc>()),
     BlocProvider(create: (_) => di.sl<HomeScreenPagesCubit>()),
-   // BlocProvider(create: (_) => di.sl<AuthBloc>()),
-
+    BlocProvider(create: (_) => di.sl<AuthBloc>()),
   ], child: MyApp(appRouter: di.sl<AppRouter>())));
 }
 
@@ -30,17 +30,18 @@ class MyApp extends StatelessWidget {
         designSize: const Size(402, 874),
         builder: (context, child) {
           // return BlocBuilder<AuthBloc, AuthState>(
-            // builder: (context, state) {
-              return MaterialApp.router(
-                      routerConfig: appRouter.config(),
-                      darkTheme: appTheme,
-                      debugShowCheckedModeBanner: false,
-                      themeMode: ThemeMode.dark,
-                      theme: appTheme,
-                     // routeInformationParser: appRouter.defaultRouteParser(),
-                      //routerDelegate: appRouter.delegate(),
-                    );
-            // },
+          // builder: (context, state) {
+          return MaterialApp.router(
+            builder: (context, child) => BotToastInit()(context, child),
+            routerConfig: appRouter.config(),
+            darkTheme: appTheme,
+            debugShowCheckedModeBanner: false,
+            themeMode: ThemeMode.dark,
+            theme: appTheme,
+            // routeInformationParser: appRouter.defaultRouteParser(),
+            //routerDelegate: appRouter.delegate(),
+          );
+          // },
           // );
         });
   }

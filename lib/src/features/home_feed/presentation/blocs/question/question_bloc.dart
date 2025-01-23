@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kz_h/src/core/error/failures.dart';
+import 'package:kz_h/src/core/usecase/usecase.dart';
 import 'package:kz_h/src/features/home_feed/domain/usecases/get_questions.dart';
 
 import '../../../domain/entities/question.dart';
@@ -31,13 +32,13 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
       emit(NextPageLoading((state as QuestionLoaded).questions));
     }
 
-    final questionsOrFailure = await getQuestions(params: event.pageIndex);
+    final questionsOrFailure = await getQuestions(params: NoParams());
 
     questionsOrFailure.fold(
       (failure) {
         var errorMessage = "";
         if (failure is ServerFailure) {
-          errorMessage = "Error on the server side";
+          errorMessage = failure.message;
         } else if (failure is NetworkFailure) {
           errorMessage = "Please check your network connection";
         } else {
@@ -51,8 +52,11 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
           final currentQuestions = (state as QuestionLoaded).questions;
           final List<Question> updatedQuestions =
               List.from(currentQuestions)..addAll(questions);
+             
+          emit(NextPageLoaded(questions));
           emit(QuestionLoaded(questions: updatedQuestions));
         } else {
+       //   print('bloc ${questions.first.question}');
           emit(QuestionLoaded(questions: questions));
         }
         isFetchingNextPage = false;

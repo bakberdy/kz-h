@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kz_h/src/features/auth/data/data_sources/auth_local_data_source.dart';
 import 'package:kz_h/src/features/auth/data/data_sources/auth_remote_data_source.dart';
@@ -13,12 +14,13 @@ import 'package:kz_h/src/features/auth/presentation/blocs/auth_bloc/bloc/auth_bl
 
 final sl = GetIt.instance;
 
-void initAuthDi() {
+Future<void> initAuthDi() async{
   //data
   sl.registerLazySingleton<Dio>(() => Dio());
+  sl.registerLazySingleton<FlutterSecureStorage>(()=>const FlutterSecureStorage());
   sl.registerLazySingleton<AuthRemoteDataSource>(
       () => AuthRemoteDataSourceImpl(dio: sl()));
-  sl.registerLazySingleton<AuthLocalDataSource>(() => sl());
+  sl.registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSourceImpl(storage: sl()));
 
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(
       networkInfo: sl(),

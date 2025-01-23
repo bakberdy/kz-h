@@ -1,9 +1,14 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kz_h/injection_container.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
+import 'package:kz_h/src/features/auth/presentation/blocs/auth_bloc/bloc/auth_bloc.dart';
 import 'package:kz_h/src/features/home_feed/presentation/blocs/question/question_bloc.dart';
+import 'package:kz_h/src/features/home_feed/presentation/blocs/variant/variant_bloc.dart';
 import 'package:kz_h/src/features/home_feed/presentation/widgets/question_widget.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class TestScrollingPage extends StatefulWidget {
   const TestScrollingPage({
@@ -17,10 +22,10 @@ class TestScrollingPage extends StatefulWidget {
   State<TestScrollingPage> createState() => _TestScrollingPageState();
 }
 
-class _TestScrollingPageState extends State<TestScrollingPage> with AutomaticKeepAliveClientMixin {
+class _TestScrollingPageState extends State<TestScrollingPage>
+    with AutomaticKeepAliveClientMixin {
   final PageController _pageController = PageController();
-  int _currentPageIndex = 0;
-  double _overscrollOffset = 0.0;
+  final Map<String, VariantBloc> _blocCache = {};
 
   @override
   void initState() {
@@ -29,13 +34,10 @@ class _TestScrollingPageState extends State<TestScrollingPage> with AutomaticKee
   }
 
   void _fetchQuestions() {
-    context.read<QuestionBloc>().add(GetQuestionRequested(pageIndex: _currentPageIndex));
+    context.read<QuestionBloc>().add(GetQuestionRequested());
   }
 
   void _loadNextPage() {
-    setState(() {
-      _currentPageIndex++;
-    });
     _fetchQuestions();
   }
 
@@ -44,14 +46,18 @@ class _TestScrollingPageState extends State<TestScrollingPage> with AutomaticKee
     super.build(context);
     return BlocConsumer<QuestionBloc, QuestionState>(
       listener: (context, state) {
-        if (state is QuestionLoaded) {
-          setState(() {
-            _overscrollOffset = 0.0;
-          });
+        if (state is NextPageLoaded) {
+          //  _pageController.nextPage(duration: const Duration(milliseconds: 600), curve: Curves.easeInOutExpo);
+          BotToast.closeAllLoading();
+          // }else if(state is NextPageLoading){
+          //   BotToast.showLoading(backgroundColor: AppColors.bluePurpleColor);
+        } else if (state is QuestionError) {
+          BotToast.closeAllLoading();
+          BotToast.showText(text: state.message, contentColor: Colors.red);
         }
       },
       builder: (context, state) {
-        if (state is QuestionLoading && _currentPageIndex == 0) {
+        if (state is QuestionLoading) {
           return _buildLoadingIndicator();
         }
 
@@ -66,11 +72,8 @@ class _TestScrollingPageState extends State<TestScrollingPage> with AutomaticKee
 
   Widget _buildLoadingIndicator() {
     return Center(
-      child: CircularProgressIndicator(
-        strokeWidth: 3,
-        color: AppColors.bluePurpleColor,
-        backgroundColor: Colors.transparent,
-      ),
+      child: LoadingAnimationWidget.fourRotatingDots(
+          size: 60.sp, color: AppColors.bluePurpleColor),
     );
   }
 
@@ -79,60 +82,27 @@ class _TestScrollingPageState extends State<TestScrollingPage> with AutomaticKee
         ? state.questions
         : (state as NextPageLoading).questions;
 
-    return NotificationListener<OverscrollNotification>(
-      onNotification: (OverscrollNotification overscroll) {
-        if (overscroll.overscroll > 0 &&
-            state is QuestionLoaded &&
-            _pageController.page == questions.length - 1) {
-          setState(() {
-            _overscrollOffset = overscroll.overscroll.clamp(0.0, 50.0); // Ограничиваем смещение
-          });
-
-          if (_overscrollOffset == 50.0) {
-            _loadNextPage();
-          }
+    return PageView.builder(
+      controller: _pageController,
+      scrollDirection: Axis.vertical,
+      itemCount: questions.length,
+      itemBuilder: (BuildContext context, int index) {
+        if (index == questions.length - 1) {
+          _loadNextPage();
         }
-        return true;
-      },
-      child: Stack(
-        children: [
-          PageView.builder(
-            controller: _pageController,
-            scrollDirection: Axis.vertical,
-            itemCount: questions.length,
-            itemBuilder: (BuildContext context, int index) {
-              final question = questions[index];
-              return QuestionWidget(question: question);
-            },
-          ),
-          Positioned(
-            bottom: 20.h,
-            left: 0,
-            right: 0,
-            child: _buildPullIndicator(),
-          ),
-        ],
-      ),
-    );
-  }
+        final question = questions[index];
 
-  Widget _buildPullIndicator() {
-    return AnimatedOpacity(
-      duration: const Duration(milliseconds: 300),
-      opacity: _overscrollOffset > 0.0 ? 1.0 : 0.0,
-      child: Transform.translate(
-        offset: Offset(0, _overscrollOffset),
-        child: SizedBox(
-          height: 40.h,
-          child: Center(
-            child: CircularProgressIndicator(
-              color: AppColors.bluePurpleColor,
-              backgroundColor: Colors.transparent,
-              strokeWidth: 3.0,
-            ),
-          ),
-        ),
-      ),
+        if (!_blocCache.containsKey('${question.questionId}+$index')) {
+          _blocCache['${question.questionId}+$index'] = sl<VariantBloc>();
+        }
+        print(question.questionId);
+        return BlocProvider.value(
+          value: _blocCache['${question.questionId}+$index']!,
+          key: PageStorageKey('Question_${question.questionId}$index}'),
+
+          child: QuestionWidget(question: question),
+        );
+      },
     );
   }
 

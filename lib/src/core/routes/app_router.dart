@@ -11,7 +11,8 @@ class AppRouter extends RootStackRouter {
     AutoRoute(
       page: BottomNavigationBarRoute.page,
       path: "/main",
-      guards: [AuthGuard(false)],
+      initial: true,
+     // guards: [AuthGuard(false)],
       children: [
         AutoRoute(page: ProfileRoute.page, path: "profile"),
         AutoRoute(page: HomeFeed.page, path: "home_feed"),
@@ -20,7 +21,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(
       page: OnboardingRoute.page,
       path: "/onboarding",
-      initial: true,
+      initial: false,
     ),
     AutoRoute(page: LoginRoute.page, path: "/login",),
     AutoRoute(page: RegisterRoute.page, path: "/register"),

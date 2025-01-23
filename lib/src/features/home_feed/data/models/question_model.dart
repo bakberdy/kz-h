@@ -8,6 +8,7 @@ class QuestionModel extends Question {
     required super.question,
     required super.topicIds,
     required super.variants,
+    super.topicName
   });
 
   QuestionModel copyWith({
@@ -15,8 +16,10 @@ class QuestionModel extends Question {
     String? question,
     List<TopicIdsModel>? topicIds,
     List<VariantModel>? variants,
+    String? topicName
   }) {
     return QuestionModel(
+      topicName: topicName,
       questionId: questionId ?? this.questionId,
       question: question ?? this.question,
       topicIds: topicIds ?? this.topicIds.cast<TopicIdsModel>(),
@@ -26,6 +29,7 @@ class QuestionModel extends Question {
 
   factory QuestionModel.fromJson(Map<String, dynamic> json) {
     return QuestionModel(
+      topicName: json['topicName'] as String?,
       questionId: json['questionId'] as String,
       question: json['question'] as String,
       topicIds: (json['topicIds'] as List<dynamic>)
@@ -33,12 +37,13 @@ class QuestionModel extends Question {
           .toList(),
       variants: (json['variants'] as List<dynamic>)
           .map((e) => VariantModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
+          .toList()..shuffle(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'topicName': topicName,
       'questionId': questionId,
       'question': question,
       'topicIds': topicIds.map((e) => (e as TopicIdsModel).toJson()).toList(),

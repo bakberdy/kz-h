@@ -29,7 +29,7 @@ class User with _$User {
     required String email,
     @Default(0) int fireDays,
     @Default(false) bool wasPlayedYesterday,
-    required int questions,
+    @Default(0) int questions,
     @Default(0) int score,
     @Default(0) int accuracy,
   }) = _User;

@@ -3,6 +3,8 @@ part of 'variant_bloc.dart';
 @immutable
 sealed class VariantState {}
 
+class VariantLoading extends VariantState{}
+
 class VariantInitial extends VariantState {
   final int index;
   final bool? correct;

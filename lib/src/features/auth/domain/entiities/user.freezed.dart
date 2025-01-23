@@ -228,7 +228,7 @@ class _$UserImpl implements _User {
       required this.email,
       this.fireDays = 0,
       this.wasPlayedYesterday = false,
-      required this.questions,
+      this.questions = 0,
       this.score = 0,
       this.accuracy = 0});
 
@@ -252,6 +252,7 @@ class _$UserImpl implements _User {
   @JsonKey()
   final bool wasPlayedYesterday;
   @override
+  @JsonKey()
   final int questions;
   @override
   @JsonKey()
@@ -319,7 +320,7 @@ abstract class _User implements User {
       required final String email,
       final int fireDays,
       final bool wasPlayedYesterday,
-      required final int questions,
+      final int questions,
       final int score,
       final int accuracy}) = _$UserImpl;
 

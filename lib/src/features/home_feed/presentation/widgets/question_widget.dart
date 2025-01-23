@@ -27,7 +27,7 @@ class QuestionWidget extends StatelessWidget {
             style: themeData.textTheme.labelSmall,
           ),
           Text(
-            question.topicIds[0].topicName,
+            question.topicName??'Қарастырылмаған',
             style: themeData.textTheme.headlineSmall,
           ),
           SizedBox(

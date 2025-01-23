@@ -15,6 +15,9 @@ class QuestionLoaded extends QuestionState {
 class NextPageLoading extends QuestionLoaded {
   NextPageLoading(List<Question> questions) : super(questions: questions);
 }
+class NextPageLoaded extends QuestionLoaded {
+  NextPageLoaded(List<Question> questions) : super(questions: questions);
+}
 
 class QuestionError extends QuestionState {
   final String message;

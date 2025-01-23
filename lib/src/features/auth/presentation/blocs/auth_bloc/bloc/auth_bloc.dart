@@ -35,6 +35,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         usernameOrEmail: event.emailOrUsername,
         password: event.password,
       ));
+      
+      //await Future.delayed(const Duration(seconds: 10));
 
       failureOrSuccess.fold(
         (failure) {

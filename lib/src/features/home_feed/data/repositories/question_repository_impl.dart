@@ -17,12 +17,28 @@ class QuestionRepositoryImpl implements QuestionRepository {
       {required this.networkInfo, required this.questionRemoteDataSource});
 
   @override
-  Future<Either<Failure, List<Question>>> getQuestions(int params) async {
+  Future<Either<Failure, List<Question>>> getQuestions() async {
     if (await networkInfo.isConnected) {
       try {
         final List<QuestionModel> questions =
             await questionRemoteDataSource.getQuestions();
+        // print('repa impl ${questions.first.question}');
         return Right(questions);
+      } catch (e) {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> answerToQuestion(
+      String quesitonId, String selectedOption) async {
+    if (await networkInfo.isConnected) {
+      try {
+        return Right(await questionRemoteDataSource.answerToQuestion(
+            quesitonId, selectedOption));
       } catch (e) {
         return Left(ServerFailure());
       }

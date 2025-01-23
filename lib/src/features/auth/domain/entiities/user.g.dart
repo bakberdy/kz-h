@@ -14,7 +14,7 @@ _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
       email: json['email'] as String,
       fireDays: (json['fireDays'] as num?)?.toInt() ?? 0,
       wasPlayedYesterday: json['wasPlayedYesterday'] as bool? ?? false,
-      questions: (json['questions'] as num).toInt(),
+      questions: (json['questions'] as num?)?.toInt() ?? 0,
       score: (json['score'] as num?)?.toInt() ?? 0,
       accuracy: (json['accuracy'] as num?)?.toInt() ?? 0,
     );
