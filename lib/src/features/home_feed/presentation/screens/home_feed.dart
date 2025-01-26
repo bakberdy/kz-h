@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kz_h/src/features/home_feed/presentation/blocs/home_screen_pages/home_screen_pages_cubit.dart';
 import 'package:kz_h/src/features/home_feed/presentation/screens/mistakes_page.dart';
+import 'package:kz_h/src/features/home_feed/presentation/screens/mistakes_scrolling_page.dart';
 import 'package:kz_h/src/features/home_feed/presentation/screens/test_scrolling_page.dart';
 
 import '../widgets/home_app_bar_widget.dart';
@@ -19,10 +20,8 @@ class HomeFeed extends StatefulWidget {
 class _HomeFeedState extends State<HomeFeed> {
   final PageController _homePageAndMistakePageController = PageController();
 
-
   @override
   Widget build(BuildContext context) {
-
     final themeData = Theme.of(context);
     return SafeArea(
       child: Scaffold(
@@ -42,10 +41,8 @@ class _HomeFeedState extends State<HomeFeed> {
           controller: _homePageAndMistakePageController,
           onPageChanged: _onPageChanged,
           children: [
-           TestScrollingPage(
-                    themeData: themeData,
-                  ),
-            const MistakesPage(),
+            TestScrollingPage(themeData: themeData),
+            MistakesScrollingPage(themeData: themeData),
           ],
         ),
       ),
@@ -69,4 +66,3 @@ class _HomeFeedState extends State<HomeFeed> {
     }
   }
 }
-

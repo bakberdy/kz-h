@@ -21,6 +21,20 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   @override
+  void initState() {
+    
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+void didChangeDependencies() {
+  context.read<AuthBloc>().add(GetUserInfoRequested());
+  super.didChangeDependencies();
+  // Ваш код для инициализации
+}
+
+  @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context).textTheme;
     return SafeArea(

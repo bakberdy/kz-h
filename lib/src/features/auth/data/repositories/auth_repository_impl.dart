@@ -19,7 +19,7 @@ class AuthRepositoryImpl implements AuthRepository {
       required this.authLocalDataSource});
 
   @override
-  Future<Either<Failure, User?>> getUserInfo() async {
+  Future<Either<Failure, User>> getUserInfo() async {
     if (await networkInfo.isConnected) {
       try {
         final accessToken = await authLocalDataSource.getAccessToken();

@@ -4,25 +4,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kz_h/injection_container.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
-import 'package:kz_h/src/features/auth/presentation/blocs/auth_bloc/bloc/auth_bloc.dart';
+import 'package:kz_h/src/features/home_feed/presentation/blocs/mistakes/mistake_bloc.dart';
 import 'package:kz_h/src/features/home_feed/presentation/blocs/question/question_bloc.dart';
 import 'package:kz_h/src/features/home_feed/presentation/blocs/variant/variant_bloc.dart';
 import 'package:kz_h/src/features/home_feed/presentation/widgets/question_widget.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class TestScrollingPage extends StatefulWidget {
-  const TestScrollingPage({
+class MistakesScrollingPage extends StatefulWidget {
+  const MistakesScrollingPage({
     super.key,
     required this.themeData,
   });
-
   final ThemeData themeData;
-
   @override
-  State<TestScrollingPage> createState() => _TestScrollingPageState();
+  State<MistakesScrollingPage> createState() => _MistakesScrollingPageState();
 }
 
-class _TestScrollingPageState extends State<TestScrollingPage>
+class _MistakesScrollingPageState extends State<MistakesScrollingPage>
     with AutomaticKeepAliveClientMixin {
   final PageController _pageController = PageController();
   final Map<String, VariantBloc> _blocCache = {};
@@ -34,60 +32,35 @@ class _TestScrollingPageState extends State<TestScrollingPage>
   }
 
   void _fetchQuestions() {
-    context.read<QuestionBloc>().add(GetQuestionRequested());
+    context.read<MistakeBloc>().add(GetMistakeRequested());
     _blocCache.clear();
   }
 
   void _loadNextPage() {
-    context.read<QuestionBloc>().add(GetNextQuestionRequested());
+    context.read<MistakeBloc>().add(GetNextMistakeRequested());
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return BlocConsumer<QuestionBloc, QuestionState>(
+    return BlocConsumer<MistakeBloc, MistakeState>(
       listener: (context, state) {
         if (state is NextPageLoaded) {
-          //  _pageController.nextPage(duration: const Duration(milliseconds: 600), curve: Curves.easeInOutExpo);
           BotToast.closeAllLoading();
-          // }else if(state is NextPageLoading){
-          //   BotToast.showLoading(backgroundColor: AppColors.bluePurpleColor);
-        } else if (state is QuestionError) {
+        } else if (state is MistakeError) {
           BotToast.closeAllLoading();
-          BotToast.showText(
-              contentColor: Colors.red,
-              text: state.message,
-              textStyle: TextStyle(fontSize: 16.sp));
+          BotToast.showText(text: state.message, contentColor: Colors.red);
         }
       },
       builder: (context, state) {
-        if (state is QuestionLoading) {
+        if (state is MistakeLoading) {
           return _buildLoadingIndicator();
-        } else if (state is QuestionLoaded || state is NextPageLoading) {
-          return _buildScrollableView(state);
-        } else if (state is QuestionError) {
-          return InkWell(
-            onTap: () async {
-              _fetchQuestions();
-            },
-            child: Center(
-              child: Text(
-                state.message,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-          );
-        } else {
-          return RefreshIndicator(
-              backgroundColor: Colors.transparent,
-              color: AppColors.bluePurpleColor,
-              onRefresh: () async {
-                _fetchQuestions();
-              },
-              child: const Expanded(
-                child: SizedBox(),
-              ));
         }
+
+        if (state is MistakeLoaded || state is MistakeNextPageLoading) {
+          return _buildScrollableView(state);
+        }
+        return const SizedBox();
       },
     );
   }
@@ -99,14 +72,14 @@ class _TestScrollingPageState extends State<TestScrollingPage>
     );
   }
 
-  Widget _buildScrollableView(QuestionState state) {
-    final questions = state is QuestionLoaded
+  Widget _buildScrollableView(MistakeState state) {
+    final questions = state is MistakeLoaded
         ? state.questions
-        : (state as NextPageLoading).questions;
+        : (state as MistakeNextPageLoading).questions;
 
     return RefreshIndicator(
-      backgroundColor: Colors.transparent,
       color: AppColors.bluePurpleColor,
+      backgroundColor: Colors.transparent,
       onRefresh: () async {
         _fetchQuestions();
       },
@@ -120,17 +93,16 @@ class _TestScrollingPageState extends State<TestScrollingPage>
           }
           final question = questions[index];
 
-          if (!_blocCache.containsKey('${question.questionId}+$index')) {
-            _blocCache['${question.questionId}+$index'] = sl<VariantBloc>();
+          if (!_blocCache.containsKey('${question.mistakeQuestionId}+$index')) {
+            _blocCache['${question.mistakeQuestionId}+$index'] =
+                sl<VariantBloc>();
           }
           print(question.questionId);
           return BlocProvider.value(
-            value: _blocCache['${question.questionId}+$index']!,
-            key: PageStorageKey(UniqueKey()),
-            child: QuestionWidget(
-              question: question,
-              isMistake: false,
-            ),
+            value: _blocCache['${question.mistakeQuestionId}+$index']!,
+            key:
+                PageStorageKey('Question_${question.mistakeQuestionId}$index}'),
+            child: QuestionWidget(question: question, isMistake: true,),
           );
         },
       ),

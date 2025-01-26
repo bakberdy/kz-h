@@ -16,10 +16,42 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
 
   QuestionBloc({required this.getQuestions}) : super(QuestionInitial()) {
     on<GetQuestionRequested>(_onGetQuestionRequested);
+    on<GetNextQuestionRequested>(_onGetNextQuestionRequested);
   }
 
   Future<void> _onGetQuestionRequested(
       GetQuestionRequested event, Emitter<QuestionState> emit) async {    
+    // Если мы уже загружаем следующую страницу, игнорируем новый запрос
+    if (isFetchingNextPage) return;
+
+    if (state is QuestionInitial || state is QuestionError) {
+      // Первая загрузка
+      emit(QuestionLoading());
+    }
+
+    final questionsOrFailure = await getQuestions(params: NoParams());
+
+    questionsOrFailure.fold(
+      (failure) {
+        var errorMessage = "";
+        if (failure is ServerFailure) {
+          errorMessage = failure.message;
+        } else if (failure is NetworkFailure) {
+          errorMessage = "Please check your network connection";
+        } else {
+          errorMessage = "An unknown error occurred";
+        }
+        emit(QuestionError(message: errorMessage));
+        isFetchingNextPage = false;
+      },
+      (questions) {
+          emit(QuestionLoaded(questions: questions));
+      },
+    );
+  }
+
+  Future<void> _onGetNextQuestionRequested(
+      GetNextQuestionRequested event, Emitter<QuestionState> emit) async {    
     // Если мы уже загружаем следующую страницу, игнорируем новый запрос
     if (isFetchingNextPage) return;
 

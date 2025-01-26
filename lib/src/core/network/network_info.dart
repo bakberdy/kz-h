@@ -1,17 +1,16 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
+/// Абстрактный класс для проверки доступности интернета
 abstract class NetworkInfo {
   Future<bool> get isConnected;
 }
 
+/// Реализация проверки интернет-соединения с использованием InternetConnectionChecker
 class NetworkInfoImpl implements NetworkInfo {
-  final Connectivity connectionChecker;
+  final InternetConnectionChecker internetConnectionChecker;
 
-  NetworkInfoImpl({required this.connectionChecker});
+  NetworkInfoImpl({required this.internetConnectionChecker});
 
   @override
-  Future<bool> get isConnected async {
-    final connectivityResult = await connectionChecker.checkConnectivity();
-    return connectivityResult != ConnectivityResult.none;
-  }
+  Future<bool> get isConnected => internetConnectionChecker.hasConnection;
 }

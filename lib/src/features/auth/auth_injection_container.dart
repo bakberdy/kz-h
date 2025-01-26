@@ -28,7 +28,7 @@ Future<void> initAuthDi() async{
       authLocalDataSource: sl()));
 
   //domain
-  sl.registerLazySingleton(() => GetUserInfo(sl()));
+  sl.registerLazySingleton(() => GetUserInfoUseCase(sl()));
   sl.registerLazySingleton(() => LogOut(sl()));
   sl.registerLazySingleton(() => Login(sl()));
   sl.registerLazySingleton(() => Refresh(sl()));

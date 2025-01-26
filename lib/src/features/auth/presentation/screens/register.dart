@@ -49,10 +49,18 @@ class _RegisterPageState extends State<RegisterPage> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is Authenticated) {
-          context.router.pushNamed('/main/home_feed');
+          final currentRoute = context.router.current.name;
+          print(currentRoute);
+          // Проверяем текущий маршрут
+          if (currentRoute == 'LoginRoute' || currentRoute == 'RegisterRoute') {
+            context.router.pushNamed('/main');
+          }
         } else if (state is AuthError) {
           print(state.message);
-          BotToast.showText(text: state.message, contentColor: Colors.red);
+          BotToast.showText(
+              contentColor: Colors.red,
+              text: state.message,
+              textStyle: TextStyle(fontSize: 16.sp));
         }
       },
       child: Scaffold(
@@ -193,22 +201,23 @@ class _RegisterPageState extends State<RegisterPage> {
                   )),
             ),
             BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-              return (state is AuthLoading) ?
-                Positioned(
-                    child: Container(
-                  color: Colors.black.withValues(alpha: 0.7),
-                  child: Center(
-                    child: LoadingAnimationWidget.fourRotatingDots(
+              return (state is AuthLoading)
+                  ? Positioned(
+                      child: Container(
+                      color: Colors.black.withValues(alpha: 0.7),
+                      child: Center(
+                        child: LoadingAnimationWidget.fourRotatingDots(
                             size: 60.sp, color: AppColors.bluePurpleColor),
-                  ),
-                )):Positioned(
-                  left: 16.w,
-                  top: 25.h,
-                  child: GestureDetector(
-                      onTap: () {
-                        context.router.maybePop();
-                      },
-                      child: Image.asset('lib/assets/icons/back.png')));
+                      ),
+                    ))
+                  : Positioned(
+                      left: 16.w,
+                      top: 25.h,
+                      child: GestureDetector(
+                          onTap: () {
+                            context.router.maybePop();
+                          },
+                          child: Image.asset('lib/assets/icons/back.png')));
             }),
           ],
         ),

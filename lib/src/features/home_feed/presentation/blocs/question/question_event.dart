@@ -6,3 +6,6 @@ sealed class QuestionEvent {}
 class GetQuestionRequested extends QuestionEvent {
   GetQuestionRequested();
 }
+class GetNextQuestionRequested extends QuestionEvent {
+  GetNextQuestionRequested();
+}

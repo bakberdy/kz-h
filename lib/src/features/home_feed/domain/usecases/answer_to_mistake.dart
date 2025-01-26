@@ -4,20 +4,19 @@ import 'package:kz_h/src/core/usecase/usecase.dart';
 import 'package:kz_h/src/features/home_feed/domain/entities/variant.dart';
 import 'package:kz_h/src/features/home_feed/domain/repositories/questions_repository.dart';
 
-class AnswerToQuestion implements UseCase<Either<Failure, List<Variant>>, AnswerParams>{
+class AnswerToMistake implements UseCase<Either<Failure, List<Variant>>,AnswerParams>{
   final QuestionRepository repository;
 
-  AnswerToQuestion(this.repository);
+  AnswerToMistake(this.repository);
   @override
   Future<Either<Failure, List<Variant>>> call({required AnswerParams params}) {
-    return repository.answerToQuestion(params.questionId, params.selectedOption);
+    return repository.answerToMistake(params.mistakeQuestionId, params.selectedOption);
   }
-
 }
 
-class AnswerParams{
-  final String questionId;
+class AnswerParams {
+  final String mistakeQuestionId;
   final String selectedOption;
 
-  AnswerParams({required this.questionId, required this.selectedOption});
+  AnswerParams({required this.mistakeQuestionId, required this.selectedOption});
 }

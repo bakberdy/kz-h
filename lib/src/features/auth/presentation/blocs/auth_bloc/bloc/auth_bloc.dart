@@ -12,7 +12,7 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final GetUserInfo getUserInfo;
+  final GetUserInfoUseCase getUserInfo;
   final Login login;
   final Register register;
   final Refresh refresh;
@@ -79,6 +79,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       emit(UnAuthenticated());
 
+    });
+    on<GetUserInfoRequested>((event, emit) async {
+      emit(AuthLoading());
+
+      final failureOrSuccess = await getUserInfo(params: NoParams());
+      
+      //await Future.delayed(const Duration(seconds: 10));
+
+      failureOrSuccess.fold(
+        (failure) {
+          emit(AuthError(failure.message));
+          emit(UnAuthenticated());
+        },
+        (success) {
+          print('Current user $success');
+          emit(Authenticated(user: success));
+        },
+      );
     });
   }
 }

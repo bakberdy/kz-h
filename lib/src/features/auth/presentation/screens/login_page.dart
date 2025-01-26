@@ -46,10 +46,18 @@ class _LoginPageState extends State<LoginPage> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is Authenticated) {
-          context.router.pushNamed('/main/home_feed');
+          final currentRoute = context.router.current.name;
+          print(currentRoute);
+          // Проверяем текущий маршрут
+          if (currentRoute == 'LoginRoute' || currentRoute == 'RegisterRoute') {
+            context.router.pushNamed('/main');
+          }
         } else if (state is AuthError) {
           print(state.message);
-          BotToast.showText(text: state.message, contentColor: Colors.red);
+          BotToast.showText(
+              contentColor: Colors.red,
+              text: state.message,
+              textStyle: TextStyle(fontSize: 16.sp));
         }
       },
       child: Scaffold(
