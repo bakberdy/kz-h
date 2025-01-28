@@ -48,13 +48,10 @@ class _LoginPageState extends State<LoginPage> {
       listener: (context, state) {
         if (state is Authenticated) {
           final currentRoute = context.router.current.name;
-          print(currentRoute);
-          // Проверяем текущий маршрут
           if (currentRoute == 'LoginRoute' || currentRoute == 'RegisterRoute') {
             context.router.pushNamed('/main');
           }
         } else if (state is AuthError) {
-          print(state.message);
           BotToast.showText(
               contentColor: Colors.red,
               text: state.message,

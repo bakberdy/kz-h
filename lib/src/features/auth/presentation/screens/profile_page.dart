@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -68,7 +69,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Image.asset('lib/assets/icons/settings.png')))
                     ],
                   ),
-                  BlocBuilder<AuthBloc, AuthState>(
+                  BlocConsumer<AuthBloc, AuthState>(
+                    listener: (BuildContext context, state) {
+                      if (state is AuthError) {
+                        BotToast.showText(
+                            contentColor: Colors.red,
+                            text: state.message,
+                            textStyle: TextStyle(fontSize: 16.sp));
+                      }
+                    },
                     builder: (context, state) {
                       User? user;
                       if (state is Authenticated) {
@@ -98,11 +107,10 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                               Text(
                                 S.of(context).usernameJoinedMonthYear(
-                                    user?.username??'N/A',
+                                    user?.username ?? 'N/A',
                                     monthFromIntToString(
-                                      user?.joinedDate?.month ?? 1,context
-                                    ),
-                                    user?.joinedDate?.year??1900),
+                                        user?.joinedDate?.month ?? 1, context),
+                                    user?.joinedDate?.year ?? 1900),
                                 style: themeData.bodySmall?.copyWith(
                                     color: AppColors.secondaryTextColor),
                               ),
@@ -163,6 +171,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       );
                     },
+                    
                   )
                 ],
               ),
