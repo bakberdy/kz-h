@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kz_h/src/core/error/failures.dart';
@@ -12,29 +11,82 @@ part 'question_state.dart';
 
 class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
   final GetQuestions getQuestions;
+
+  bool isFetchingNextPage = false; // Флаг для предотвращения повторного запроса
+
   QuestionBloc({required this.getQuestions}) : super(QuestionInitial()) {
-    on<GetQuestionRequested>((event, emit) async {
+    on<GetQuestionRequested>(_onGetQuestionRequested);
+    on<GetNextQuestionRequested>(_onGetNextQuestionRequested);
+  }
+
+  Future<void> _onGetQuestionRequested(
+      GetQuestionRequested event, Emitter<QuestionState> emit) async {    
       emit(QuestionLoading());
-      final questionsOrFailure= await getQuestions(params: NoParams());
-      questionsOrFailure.fold((failure) {
+
+    final questionsOrFailure = await getQuestions(params: NoParams());
+
+    questionsOrFailure.fold(
+      (failure) {
         var errorMessage = "";
-        if(failure is ServerFailure){
-          errorMessage = "Error in server side";
-        }else if(failure is NetworkFailure){
+        if (failure is ServerFailure) {
+          errorMessage = failure.message;
+        } else if (failure is NetworkFailure) {
           errorMessage = "Please check your network connection";
-        }else{
-          errorMessage = "Unknown error occurred";
+        } else {
+          errorMessage = "An unknown error occurred";
         }
-      }, (questions) {
-        if (state is QuestionLoaded) {
+        emit(QuestionError(message: errorMessage));
+        isFetchingNextPage = false;
+      },
+      (questions) {
+          emit(QuestionLoaded(questions: questions));
+      },
+    );
+  }
+
+  Future<void> _onGetNextQuestionRequested(
+      GetNextQuestionRequested event, Emitter<QuestionState> emit) async {    
+    // Если мы уже загружаем следующую страницу, игнорируем новый запрос
+    if (isFetchingNextPage) return;
+
+    if (state is QuestionInitial || state is QuestionError) {
+      // Первая загрузка
+      emit(QuestionLoading());
+    } else if (state is QuestionLoaded) {
+      // Загрузка следующей страницы
+      isFetchingNextPage = true;
+      emit(NextPageLoading((state as QuestionLoaded).questions));
+    }
+
+    final questionsOrFailure = await getQuestions(params: NoParams());
+
+    questionsOrFailure.fold(
+      (failure) {
+        var errorMessage = "";
+        if (failure is ServerFailure) {
+          errorMessage = failure.message;
+        } else if (failure is NetworkFailure) {
+          errorMessage = "Please check your network connection";
+        } else {
+          errorMessage = "An unknown error occurred";
+        }
+        emit(QuestionError(message: errorMessage));
+        isFetchingNextPage = false;
+      },
+      (questions) {
+        if (state is QuestionLoaded || state is NextPageLoading) {
           final currentQuestions = (state as QuestionLoaded).questions;
-          final List<Question> updatedQuestions = List.from(currentQuestions)..addAll(questions);
+          final List<Question> updatedQuestions =
+              List.from(currentQuestions)..addAll(questions);
+             
+          emit(NextPageLoaded(questions));
           emit(QuestionLoaded(questions: updatedQuestions));
         } else {
+       //   log('bloc ${questions.first.question}');
           emit(QuestionLoaded(questions: questions));
         }
-        emit(QuestionLoaded(questions: questions));
-      });
-    });
+        isFetchingNextPage = false;
+      },
+    );
   }
 }

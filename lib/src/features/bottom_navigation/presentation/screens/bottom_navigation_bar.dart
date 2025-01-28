@@ -19,6 +19,7 @@ class BottomNavigationBarPage extends StatelessWidget {
         return PreferredSize(
           preferredSize: Size.fromHeight(100.h),
           child: BottomNavigationBar(
+            
             backgroundColor: AppColors.bottomNavigationBarColor,
             currentIndex: tabsRouter.activeIndex,
             onTap: tabsRouter.setActiveIndex,
@@ -48,6 +49,7 @@ class BottomNavigationBarPage extends StatelessWidget {
     required bool isActive,
   }) {
     return BottomNavigationBarItem(
+      
       icon: Padding(
         padding: EdgeInsets.only(top: 10.h),
         child: SvgIconViewer(

@@ -20,6 +20,37 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(username, month, year) =>
+      "@${username} ~ Joined ${month} ${year}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{};
+  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "accuracy": MessageLookupByLibrary.simpleMessage("Accuracy"),
+    "confirmPassword": MessageLookupByLibrary.simpleMessage("Confirm password"),
+    "email": MessageLookupByLibrary.simpleMessage("Email"),
+    "fireDays": MessageLookupByLibrary.simpleMessage("Fire Days"),
+    "login": MessageLookupByLibrary.simpleMessage("Sign in"),
+    "monthApril": MessageLookupByLibrary.simpleMessage("April"),
+    "monthAugust": MessageLookupByLibrary.simpleMessage("August"),
+    "monthDecember": MessageLookupByLibrary.simpleMessage("December"),
+    "monthFebruary": MessageLookupByLibrary.simpleMessage("February"),
+    "monthJanuary": MessageLookupByLibrary.simpleMessage("January"),
+    "monthJuly": MessageLookupByLibrary.simpleMessage("July"),
+    "monthJune": MessageLookupByLibrary.simpleMessage("June"),
+    "monthMarch": MessageLookupByLibrary.simpleMessage("March"),
+    "monthMay": MessageLookupByLibrary.simpleMessage("May"),
+    "monthNovember": MessageLookupByLibrary.simpleMessage("November"),
+    "monthOctober": MessageLookupByLibrary.simpleMessage("October"),
+    "monthSeptember": MessageLookupByLibrary.simpleMessage("September"),
+    "password": MessageLookupByLibrary.simpleMessage("Password"),
+    "profileOverview": MessageLookupByLibrary.simpleMessage("Overview"),
+    "questions": MessageLookupByLibrary.simpleMessage("Questions"),
+    "register": MessageLookupByLibrary.simpleMessage("Register Now!"),
+    "score": MessageLookupByLibrary.simpleMessage("Score"),
+    "username": MessageLookupByLibrary.simpleMessage("Username"),
+    "usernameJoinedMonthYear": m0,
+    "usernameOrEmail": MessageLookupByLibrary.simpleMessage(
+      "Username or Email",
+    ),
+  };
 }
