@@ -32,31 +32,33 @@ class VariantWidget extends StatelessWidget {
         onTap: isLoading ? null : onTap,
         borderRadius: BorderRadius.circular(4.r),
         child: Container(
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4.r),
-            border: Border.all(
-                color: questionState == QuestionStateEnum.notSelected
-                    ? const Color(0xff4A4A4A)
-                    : Colors.transparent,
-                width: 1),
-            color: questionState == QuestionStateEnum.notSelected
-                ? Colors.transparent
-                : questionState == QuestionStateEnum.correct
-                    ? Colors.green
-                    : Colors.red,
-          ),
-          child: isLoading
-              ? Center(
-                child: LoadingAnimationWidget.horizontalRotatingDots(
-                    color: AppColors.bluePurpleColor, size: 30.sp),
-              )
-              : Text(
-                  "$letterIndex) ${variant.text}",
-                  style: themeData.textTheme.bodySmall,
-                ),
-        ),
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4.r),
+              border: Border.all(
+                  color: questionState == QuestionStateEnum.notSelected
+                      ? const Color(0xff4A4A4A)
+                      : Colors.transparent,
+                  width: 1),
+              color: questionState == QuestionStateEnum.notSelected
+                  ? Colors.transparent
+                  : questionState == QuestionStateEnum.correct
+                      ? Colors.green
+                      : Colors.red,
+            ),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: isLoading
+                  ? Center(
+                      child: LoadingAnimationWidget.horizontalRotatingDots(
+                          color: AppColors.bluePurpleColor, size: 30.sp),
+                    )
+                  : Text(
+                      "$letterIndex) ${variant.text}",
+                      style: themeData.textTheme.bodySmall,
+                    ),
+            )),
       ),
       SizedBox(
         height: 15.h,

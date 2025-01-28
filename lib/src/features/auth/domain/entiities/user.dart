@@ -29,10 +29,18 @@ class User with _$User {
     required String email,
     @Default(0) int fireDays,
     @Default(false) bool wasPlayedYesterday,
-    @Default(0) int questions,
+    @Default(0) int answeredQuestionsCount,
     @Default(0) int score,
-    @Default(0) int accuracy,
+    @Default(0) double accuracy,
+    @JsonKey(fromJson: _fromJsonDate, toJson: _toJsonDate)
+    DateTime? joinedDate,
+    
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 }
+
+DateTime? _fromJsonDate(String? date) =>
+    date == null ? null : DateTime.parse(date);
+
+String? _toJsonDate(DateTime? date) => date?.toIso8601String();

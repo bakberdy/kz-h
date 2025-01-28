@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kz_h/generated/l10n.dart';
 import 'package:kz_h/src/features/auth/presentation/widgets/filled_button.dart';
 
 @RoutePage()
@@ -41,7 +42,7 @@ class OnboardingScreen extends StatelessWidget {
                       bgColor: const Color(0xff5348F2),
                       onPressed: () {
                         context.router.pushNamed('/login');
-                       },text: "Sign In"),
+                       },text: S.of(context).login),
                   ),
                   SizedBox(
                     height: 20.h,
@@ -49,7 +50,7 @@ class OnboardingScreen extends StatelessWidget {
                   SizedBox(
                     height: 60.h,
                     width: 354.w,
-                    child:MyFilledButton(text: 'Register now!', onPressed: () {
+                    child:MyFilledButton(text: S.of(context).register, onPressed: () {
                           AutoRouter.of(context).pushNamed('/register');
                         }, bgColor: const Color(0xff272727))   
                   ),

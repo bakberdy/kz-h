@@ -21,13 +21,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
 
   Future<void> _onGetQuestionRequested(
       GetQuestionRequested event, Emitter<QuestionState> emit) async {    
-    // Если мы уже загружаем следующую страницу, игнорируем новый запрос
-    if (isFetchingNextPage) return;
-
-    if (state is QuestionInitial || state is QuestionError) {
-      // Первая загрузка
       emit(QuestionLoading());
-    }
 
     final questionsOrFailure = await getQuestions(params: NoParams());
 
@@ -88,7 +82,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
           emit(NextPageLoaded(questions));
           emit(QuestionLoaded(questions: updatedQuestions));
         } else {
-       //   print('bloc ${questions.first.question}');
+       //   log('bloc ${questions.first.question}');
           emit(QuestionLoaded(questions: questions));
         }
         isFetchingNextPage = false;

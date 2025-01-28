@@ -3,17 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kz_h/src/features/home_feed/domain/entities/question.dart';
 import 'package:kz_h/src/features/home_feed/presentation/blocs/variant/variant_bloc.dart';
-import 'package:kz_h/src/features/home_feed/presentation/widgets/variant_widget.dart';
 import 'package:kz_h/src/features/home_feed/presentation/widgets/variants_bar.dart';
 
 class QuestionWidget extends StatelessWidget {
   const QuestionWidget({
     super.key,
-    required this.question, required this.isMistake,
+    required this.question,
+    required this.isMistake,
+    required this.onVariantPressed,
   });
 
   final Question question;
   final bool isMistake;
+  final VoidCallback onVariantPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +64,11 @@ class QuestionWidget extends StatelessWidget {
                 SizedBox(
                   height: 20.h,
                 ),
-                VariantsBar(question: question, isMistake: isMistake,)
+                VariantsBar(
+                  question: question,
+                  isMistake: isMistake,
+                  onVariantLoaded: onVariantPressed,
+                )
               ],
             ),
           ),
@@ -78,7 +84,9 @@ class QuestionWidget extends StatelessWidget {
                       'Дұрыс жауап:',
                       style: themeData.textTheme.labelSmall,
                     ),
-                    SizedBox(height: 10.h,),
+                    SizedBox(
+                      height: 10.h,
+                    ),
                     Container(
                       alignment: Alignment.centerLeft,
                       padding: const EdgeInsets.all(10),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kz_h/src/features/home_feed/presentation/blocs/home_screen_pages/home_screen_pages_cubit.dart';
-import 'package:kz_h/src/features/home_feed/presentation/screens/mistakes_page.dart';
 import 'package:kz_h/src/features/home_feed/presentation/screens/mistakes_scrolling_page.dart';
 import 'package:kz_h/src/features/home_feed/presentation/screens/test_scrolling_page.dart';
 

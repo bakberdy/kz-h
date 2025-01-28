@@ -6,6 +6,7 @@ import 'package:kz_h/src/core/usecase/usecase.dart';
 import 'package:kz_h/src/features/home_feed/data/data_sources/question_remote_data_source.dart';
 import 'package:kz_h/src/features/home_feed/data/repositories/question_repository_impl.dart';
 import 'package:kz_h/src/features/home_feed/domain/repositories/questions_repository.dart';
+import 'package:kz_h/src/features/home_feed/domain/usecases/answer_to_mistake.dart';
 import 'package:kz_h/src/features/home_feed/domain/usecases/answer_to_question.dart';
 import 'package:kz_h/src/features/home_feed/domain/usecases/get_mistakes.dart';
 import 'package:kz_h/src/features/home_feed/domain/usecases/get_questions.dart';
@@ -30,11 +31,12 @@ Future<void> initHomeDi() async{
   sl.registerLazySingleton(() => GetQuestions(sl()));
   sl.registerFactory(()=>AnswerToQuestion(sl()));
   sl.registerLazySingleton(()=>GetMistakes(sl()));
+  sl.registerLazySingleton(()=> AnswerToMistake(sl()));
 
   // Presentation Layer
   sl.registerFactory(() => QuestionBloc(getQuestions: sl()));
   sl.registerFactory(()=> HomeScreenPagesCubit());
-  sl.registerFactory(()=> VariantBloc(answerToQuestion: sl()));
+  sl.registerFactory(()=> VariantBloc(answerToQuestion: sl(), answerToMistake: sl()));
   sl.registerFactory(()=> MistakeBloc(getMistakes: sl()));
 }
 

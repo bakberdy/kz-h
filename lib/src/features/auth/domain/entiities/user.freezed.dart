@@ -27,9 +27,11 @@ mixin _$User {
   String get email => throw _privateConstructorUsedError;
   int get fireDays => throw _privateConstructorUsedError;
   bool get wasPlayedYesterday => throw _privateConstructorUsedError;
-  int get questions => throw _privateConstructorUsedError;
+  int get answeredQuestionsCount => throw _privateConstructorUsedError;
   int get score => throw _privateConstructorUsedError;
-  int get accuracy => throw _privateConstructorUsedError;
+  double get accuracy => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _fromJsonDate, toJson: _toJsonDate)
+  DateTime? get joinedDate => throw _privateConstructorUsedError;
 
   /// Serializes this User to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -53,9 +55,11 @@ abstract class $UserCopyWith<$Res> {
       String email,
       int fireDays,
       bool wasPlayedYesterday,
-      int questions,
+      int answeredQuestionsCount,
       int score,
-      int accuracy});
+      double accuracy,
+      @JsonKey(fromJson: _fromJsonDate, toJson: _toJsonDate)
+      DateTime? joinedDate});
 }
 
 /// @nodoc
@@ -80,9 +84,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? email = null,
     Object? fireDays = null,
     Object? wasPlayedYesterday = null,
-    Object? questions = null,
+    Object? answeredQuestionsCount = null,
     Object? score = null,
     Object? accuracy = null,
+    Object? joinedDate = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -113,9 +118,9 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.wasPlayedYesterday
           : wasPlayedYesterday // ignore: cast_nullable_to_non_nullable
               as bool,
-      questions: null == questions
-          ? _value.questions
-          : questions // ignore: cast_nullable_to_non_nullable
+      answeredQuestionsCount: null == answeredQuestionsCount
+          ? _value.answeredQuestionsCount
+          : answeredQuestionsCount // ignore: cast_nullable_to_non_nullable
               as int,
       score: null == score
           ? _value.score
@@ -124,7 +129,11 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
       accuracy: null == accuracy
           ? _value.accuracy
           : accuracy // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
+      joinedDate: freezed == joinedDate
+          ? _value.joinedDate
+          : joinedDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -144,9 +153,11 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       String email,
       int fireDays,
       bool wasPlayedYesterday,
-      int questions,
+      int answeredQuestionsCount,
       int score,
-      int accuracy});
+      double accuracy,
+      @JsonKey(fromJson: _fromJsonDate, toJson: _toJsonDate)
+      DateTime? joinedDate});
 }
 
 /// @nodoc
@@ -168,9 +179,10 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? email = null,
     Object? fireDays = null,
     Object? wasPlayedYesterday = null,
-    Object? questions = null,
+    Object? answeredQuestionsCount = null,
     Object? score = null,
     Object? accuracy = null,
+    Object? joinedDate = freezed,
   }) {
     return _then(_$UserImpl(
       id: null == id
@@ -201,9 +213,9 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.wasPlayedYesterday
           : wasPlayedYesterday // ignore: cast_nullable_to_non_nullable
               as bool,
-      questions: null == questions
-          ? _value.questions
-          : questions // ignore: cast_nullable_to_non_nullable
+      answeredQuestionsCount: null == answeredQuestionsCount
+          ? _value.answeredQuestionsCount
+          : answeredQuestionsCount // ignore: cast_nullable_to_non_nullable
               as int,
       score: null == score
           ? _value.score
@@ -212,7 +224,11 @@ class __$$UserImplCopyWithImpl<$Res>
       accuracy: null == accuracy
           ? _value.accuracy
           : accuracy // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
+      joinedDate: freezed == joinedDate
+          ? _value.joinedDate
+          : joinedDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -228,9 +244,10 @@ class _$UserImpl implements _User {
       required this.email,
       this.fireDays = 0,
       this.wasPlayedYesterday = false,
-      this.questions = 0,
+      this.answeredQuestionsCount = 0,
       this.score = 0,
-      this.accuracy = 0});
+      this.accuracy = 0,
+      @JsonKey(fromJson: _fromJsonDate, toJson: _toJsonDate) this.joinedDate});
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserImplFromJson(json);
@@ -253,17 +270,20 @@ class _$UserImpl implements _User {
   final bool wasPlayedYesterday;
   @override
   @JsonKey()
-  final int questions;
+  final int answeredQuestionsCount;
   @override
   @JsonKey()
   final int score;
   @override
   @JsonKey()
-  final int accuracy;
+  final double accuracy;
+  @override
+  @JsonKey(fromJson: _fromJsonDate, toJson: _toJsonDate)
+  final DateTime? joinedDate;
 
   @override
   String toString() {
-    return 'User(id: $id, fullName: $fullName, username: $username, imageUrl: $imageUrl, email: $email, fireDays: $fireDays, wasPlayedYesterday: $wasPlayedYesterday, questions: $questions, score: $score, accuracy: $accuracy)';
+    return 'User(id: $id, fullName: $fullName, username: $username, imageUrl: $imageUrl, email: $email, fireDays: $fireDays, wasPlayedYesterday: $wasPlayedYesterday, answeredQuestionsCount: $answeredQuestionsCount, score: $score, accuracy: $accuracy, joinedDate: $joinedDate)';
   }
 
   @override
@@ -283,17 +303,30 @@ class _$UserImpl implements _User {
                 other.fireDays == fireDays) &&
             (identical(other.wasPlayedYesterday, wasPlayedYesterday) ||
                 other.wasPlayedYesterday == wasPlayedYesterday) &&
-            (identical(other.questions, questions) ||
-                other.questions == questions) &&
+            (identical(other.answeredQuestionsCount, answeredQuestionsCount) ||
+                other.answeredQuestionsCount == answeredQuestionsCount) &&
             (identical(other.score, score) || other.score == score) &&
             (identical(other.accuracy, accuracy) ||
-                other.accuracy == accuracy));
+                other.accuracy == accuracy) &&
+            (identical(other.joinedDate, joinedDate) ||
+                other.joinedDate == joinedDate));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, fullName, username, imageUrl,
-      email, fireDays, wasPlayedYesterday, questions, score, accuracy);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      fullName,
+      username,
+      imageUrl,
+      email,
+      fireDays,
+      wasPlayedYesterday,
+      answeredQuestionsCount,
+      score,
+      accuracy,
+      joinedDate);
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
@@ -320,9 +353,11 @@ abstract class _User implements User {
       required final String email,
       final int fireDays,
       final bool wasPlayedYesterday,
-      final int questions,
+      final int answeredQuestionsCount,
       final int score,
-      final int accuracy}) = _$UserImpl;
+      final double accuracy,
+      @JsonKey(fromJson: _fromJsonDate, toJson: _toJsonDate)
+      final DateTime? joinedDate}) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
@@ -341,11 +376,14 @@ abstract class _User implements User {
   @override
   bool get wasPlayedYesterday;
   @override
-  int get questions;
+  int get answeredQuestionsCount;
   @override
   int get score;
   @override
-  int get accuracy;
+  double get accuracy;
+  @override
+  @JsonKey(fromJson: _fromJsonDate, toJson: _toJsonDate)
+  DateTime? get joinedDate;
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.

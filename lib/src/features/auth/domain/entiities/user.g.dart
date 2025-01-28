@@ -14,9 +14,11 @@ _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
       email: json['email'] as String,
       fireDays: (json['fireDays'] as num?)?.toInt() ?? 0,
       wasPlayedYesterday: json['wasPlayedYesterday'] as bool? ?? false,
-      questions: (json['questions'] as num?)?.toInt() ?? 0,
+      answeredQuestionsCount:
+          (json['answeredQuestionsCount'] as num?)?.toInt() ?? 0,
       score: (json['score'] as num?)?.toInt() ?? 0,
-      accuracy: (json['accuracy'] as num?)?.toInt() ?? 0,
+      accuracy: (json['accuracy'] as num?)?.toDouble() ?? 0,
+      joinedDate: _fromJsonDate(json['joinedDate'] as String?),
     );
 
 Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
@@ -28,7 +30,8 @@ Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
       'email': instance.email,
       'fireDays': instance.fireDays,
       'wasPlayedYesterday': instance.wasPlayedYesterday,
-      'questions': instance.questions,
+      'answeredQuestionsCount': instance.answeredQuestionsCount,
       'score': instance.score,
       'accuracy': instance.accuracy,
+      'joinedDate': _toJsonDate(instance.joinedDate),
     };

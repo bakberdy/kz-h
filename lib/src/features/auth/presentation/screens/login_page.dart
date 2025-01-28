@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_validation/form_validation.dart';
+import 'package:kz_h/generated/l10n.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
 import 'package:kz_h/src/features/auth/presentation/blocs/auth_bloc/bloc/auth_bloc.dart';
 import 'package:kz_h/src/features/auth/presentation/widgets/auth_input_field.dart';
@@ -89,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                           SizedBox(
                             height: 5.h,
                           ),
-                          Text('LOGIN',
+                          Text(S.of(context).login.toUpperCase(),
                               style: themeData.textTheme.bodyMedium
                                   ?.copyWith(color: Colors.white))
                         ],
@@ -103,14 +104,14 @@ class _LoginPageState extends State<LoginPage> {
                               width: 354.w,
                               child: AuthInputField(
                                 controller: usernameOrEmailController,
-                                hintText: 'Username or Email',
+                                hintText: S.of(context).usernameOrEmail,
                                 validator: (value) {
                                   final validator = Validator(validators: [
                                     const RequiredValidator(),
                                     //  const EmailValidator()
                                   ]);
                                   return validator.validate(
-                                      label: 'Email or Username', value: value);
+                                      label: S.of(context).usernameOrEmail, value: value);
                                 },
                               ),
                             ),
@@ -122,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: AuthInputField(
                                 controller: passwordController,
                                 obscuredText: true,
-                                hintText: 'Password',
+                                hintText: S.of(context).password,
                                 validator: (value) {
                                   final validator = Validator(validators: [
                                     const MinLengthValidator(length: 6),
@@ -140,14 +141,11 @@ class _LoginPageState extends State<LoginPage> {
                               height: 60.h,
                               width: 354.w,
                               child: MyFilledButton(
-                                  text: 'SIGN IN',
+                                  text: S.of(context).login,
                                   onPressed: () async {
                                     if (_formKey.currentState?.validate() ??
                                         false) {
                                       await submit();
-                                      print('Form is valid');
-                                    } else {
-                                      print('Form is invalid');
                                     }
                                   },
                                   bgColor: AppColors.bluePurpleColor),

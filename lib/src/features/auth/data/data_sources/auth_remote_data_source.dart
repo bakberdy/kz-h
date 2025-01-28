@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:kz_h/src/core/error/exceptions.dart';
@@ -30,7 +31,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String password,
   }) async {
     try {
-      print('Login in data source');
       final response = await dio.post(
         '$URL/login',
         data: {
@@ -40,7 +40,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print('HTTP 200: Success');
+        // log('Login success');
         final data = response.data as Map<String, dynamic>;
 
         final accessToken = data['access_token'] as String?;
@@ -204,7 +204,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw ServerException('Network error: ${dioError.message}');
       }
     } catch (e) {
-      print('Error in getUserInfo: $e');
+      // print('Error in getUserInfo: $e');
       rethrow;
     }
   }

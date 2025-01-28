@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_validation/form_validation.dart';
+import 'package:kz_h/generated/l10n.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
 import 'package:kz_h/src/features/auth/presentation/blocs/auth_bloc/bloc/auth_bloc.dart';
 import 'package:kz_h/src/features/auth/presentation/widgets/auth_input_field.dart';
@@ -39,7 +39,15 @@ class _RegisterPageState extends State<RegisterPage> {
         password: password,
         confirmPassword: confirmPassword,
         username: username));
-    print('Submit method');
+  }
+
+  @override
+  void dispose() {
+    confirmPasswordController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    usernameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -50,13 +58,10 @@ class _RegisterPageState extends State<RegisterPage> {
       listener: (context, state) {
         if (state is Authenticated) {
           final currentRoute = context.router.current.name;
-          print(currentRoute);
-          // Проверяем текущий маршрут
           if (currentRoute == 'LoginRoute' || currentRoute == 'RegisterRoute') {
             context.router.pushNamed('/main');
           }
         } else if (state is AuthError) {
-          print(state.message);
           BotToast.showText(
               contentColor: Colors.red,
               text: state.message,
@@ -92,7 +97,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           SizedBox(
                             height: 5.h,
                           ),
-                          Text('REGISTER',
+                          Text(S.of(context).register.toUpperCase(),
                               style: themeData.textTheme.bodyMedium
                                   ?.copyWith(color: Colors.white))
                         ],
@@ -108,14 +113,15 @@ class _RegisterPageState extends State<RegisterPage> {
                               width: 354.w,
                               child: AuthInputField(
                                 controller: usernameController,
-                                hintText: 'Username',
+                                hintText: S.of(context).username,
                                 validator: (value) {
                                   final validator = Validator(validators: [
                                     const RequiredValidator(),
                                     //  const EmailValidator()
                                   ]);
                                   return validator.validate(
-                                      label: 'Username', value: value);
+                                      label: S.of(context).username,
+                                      value: value);
                                 },
                               ),
                             ),
@@ -126,14 +132,14 @@ class _RegisterPageState extends State<RegisterPage> {
                               width: 354.w,
                               child: AuthInputField(
                                 controller: emailController,
-                                hintText: 'Email',
+                                hintText: S.of(context).email,
                                 validator: (value) {
                                   final validator = Validator(validators: [
                                     const RequiredValidator(),
                                     const EmailValidator()
                                   ]);
                                   return validator.validate(
-                                      label: 'Email', value: value);
+                                      label: S.of(context).email, value: value);
                                 },
                               ),
                             ),
@@ -145,14 +151,15 @@ class _RegisterPageState extends State<RegisterPage> {
                               child: AuthInputField(
                                 controller: passwordController,
                                 obscuredText: true,
-                                hintText: 'Password',
+                                hintText: S.of(context).password,
                                 validator: (value) {
                                   final validator = Validator(validators: [
                                     const MinLengthValidator(length: 6),
                                     const RequiredValidator(),
                                   ]);
                                   return validator.validate(
-                                      label: 'Password', value: value);
+                                      label: S.of(context).password,
+                                      value: value);
                                 },
                               ),
                             ),
@@ -164,14 +171,15 @@ class _RegisterPageState extends State<RegisterPage> {
                               child: AuthInputField(
                                 controller: confirmPasswordController,
                                 obscuredText: true,
-                                hintText: 'Confirm password',
+                                hintText: S.of(context).confirmPassword,
                                 validator: (value) {
                                   final validator = Validator(validators: [
                                     const MinLengthValidator(length: 6),
                                     const RequiredValidator(),
                                   ]);
                                   return validator.validate(
-                                      label: 'Confirm Password', value: value);
+                                      label: S.of(context).confirmPassword,
+                                      value: value);
                                 },
                               ),
                             ),
@@ -182,14 +190,11 @@ class _RegisterPageState extends State<RegisterPage> {
                               height: 60.h,
                               width: 354.w,
                               child: MyFilledButton(
-                                  text: 'SIGN UP',
+                                  text: S.of(context).register,
                                   onPressed: () {
                                     if (_formKey.currentState?.validate() ??
                                         false) {
-                                      print('Form is valid');
                                       submit();
-                                    } else {
-                                      print('Form is invalid');
                                     }
                                   },
                                   bgColor: AppColors.bluePurpleColor),

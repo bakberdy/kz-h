@@ -13,8 +13,10 @@ class VariantsBar extends StatelessWidget {
     super.key,
     required this.question,
     required this.isMistake,
+    required this.onVariantLoaded,
   });
   final bool isMistake;
+  final VoidCallback onVariantLoaded;
 
   final Question question;
   final alphabetLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
@@ -23,13 +25,13 @@ class VariantsBar extends StatelessWidget {
       {required Variant variant,
       required VariantState state,
       required BuildContext context}) {
-    print('${question.mistakeQuestionId}shhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');
     if (state is! VariantLoaded) {
       context.read<VariantBloc>().add(VariantTappedRequested(
           questionId: isMistake
               ? question.mistakeQuestionId ?? ''
               : question.questionId,
-          selectedOption: variant.text));
+          selectedOption: variant.text,
+          isMistake: isMistake));
     } else {
       BotToast.showText(
           align: const Alignment(0, 0.7),
@@ -73,12 +75,15 @@ class VariantsBar extends StatelessWidget {
           },
         );
       },
-      listener: (BuildContext context, state) {
+      listener: (BuildContext context, state) async {
         if (state is VariantError) {
           BotToast.showText(
               contentColor: Colors.red,
               text: state.message,
               textStyle: TextStyle(fontSize: 16.sp));
+        } else if (state is VariantLoaded) {
+          await Future.delayed(const Duration(milliseconds: 1500));
+          onVariantLoaded();
         }
       },
     );

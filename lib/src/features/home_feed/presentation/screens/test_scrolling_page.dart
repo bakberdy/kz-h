@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kz_h/injection_container.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
-import 'package:kz_h/src/features/auth/presentation/blocs/auth_bloc/bloc/auth_bloc.dart';
 import 'package:kz_h/src/features/home_feed/presentation/blocs/question/question_bloc.dart';
 import 'package:kz_h/src/features/home_feed/presentation/blocs/variant/variant_bloc.dart';
 import 'package:kz_h/src/features/home_feed/presentation/widgets/question_widget.dart';
@@ -48,10 +47,7 @@ class _TestScrollingPageState extends State<TestScrollingPage>
     return BlocConsumer<QuestionBloc, QuestionState>(
       listener: (context, state) {
         if (state is NextPageLoaded) {
-          //  _pageController.nextPage(duration: const Duration(milliseconds: 600), curve: Curves.easeInOutExpo);
           BotToast.closeAllLoading();
-          // }else if(state is NextPageLoading){
-          //   BotToast.showLoading(backgroundColor: AppColors.bluePurpleColor);
         } else if (state is QuestionError) {
           BotToast.closeAllLoading();
           BotToast.showText(
@@ -67,6 +63,8 @@ class _TestScrollingPageState extends State<TestScrollingPage>
           return _buildScrollableView(state);
         } else if (state is QuestionError) {
           return InkWell(
+            highlightColor: AppColors.darkBgColor,
+            splashColor: AppColors.bottomNavigationBarColor,
             onTap: () async {
               _fetchQuestions();
             },
@@ -84,9 +82,7 @@ class _TestScrollingPageState extends State<TestScrollingPage>
               onRefresh: () async {
                 _fetchQuestions();
               },
-              child: const Expanded(
-                child: SizedBox(),
-              ));
+              child: const SizedBox());
         }
       },
     );
@@ -123,13 +119,19 @@ class _TestScrollingPageState extends State<TestScrollingPage>
           if (!_blocCache.containsKey('${question.questionId}+$index')) {
             _blocCache['${question.questionId}+$index'] = sl<VariantBloc>();
           }
-          print(question.questionId);
-          return BlocProvider.value(
-            value: _blocCache['${question.questionId}+$index']!,
-            key: PageStorageKey(UniqueKey()),
-            child: QuestionWidget(
-              question: question,
-              isMistake: false,
+          return SingleChildScrollView(
+            child: BlocProvider.value(
+              value: _blocCache['${question.questionId}+$index']!,
+              key: PageStorageKey('${question.questionId}+$index'),
+              child: QuestionWidget(
+                question: question,
+                isMistake: false,
+                onVariantPressed: () {
+                  _pageController.animateToPage(1 + index,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.linear);
+                },
+              ),
             ),
           );
         },

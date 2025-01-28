@@ -55,12 +55,26 @@ class _MistakesScrollingPageState extends State<MistakesScrollingPage>
       builder: (context, state) {
         if (state is MistakeLoading) {
           return _buildLoadingIndicator();
+        }else if (state is MistakeError) {
+          return InkWell(
+            onTap: (){
+              _fetchQuestions();
+            },
+            highlightColor: AppColors.darkBgColor,
+            splashColor: AppColors.bottomNavigationBarColor,
+              child: Center(
+            child: Text(state.message, style: const TextStyle(color: Colors.white),),
+          ));
         }
 
         if (state is MistakeLoaded || state is MistakeNextPageLoading) {
           return _buildScrollableView(state);
         }
-        return const SizedBox();
+        return InkWell(
+          onTap: () {
+            context.read<MistakeBloc>().add(GetMistakeRequested());
+          },
+        );
       },
     );
   }
@@ -86,24 +100,43 @@ class _MistakesScrollingPageState extends State<MistakesScrollingPage>
       child: PageView.builder(
         controller: _pageController,
         scrollDirection: Axis.vertical,
-        itemCount: questions.length,
+        itemCount: questions.length + 1,
         itemBuilder: (BuildContext context, int index) {
-          if (index == questions.length - 1) {
-            _loadNextPage();
-          }
-          final question = questions[index];
+          if (index >= questions.length) {
+            return InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: AppColors.bottomNavigationBarColor,
+                onTap: index == 0
+                    ? () {
+                        context.read<MistakeBloc>().add(GetMistakeRequested());
+                      }
+                    : null,
+                child: const Center(child: Text('Қате сұрақтар бітті')));
+          } else {
+            final question = questions[index];
 
-          if (!_blocCache.containsKey('${question.mistakeQuestionId}+$index')) {
-            _blocCache['${question.mistakeQuestionId}+$index'] =
-                sl<VariantBloc>();
+            if (!_blocCache
+                .containsKey('${question.mistakeQuestionId}+$index')) {
+              _blocCache['${question.mistakeQuestionId}+$index'] =
+                  sl<VariantBloc>();
+            }
+            return SingleChildScrollView(
+              child: BlocProvider.value(
+                value: _blocCache['${question.mistakeQuestionId}+$index']!,
+                key: PageStorageKey(
+                    'Question_${question.mistakeQuestionId}$index}'),
+                child: QuestionWidget(
+                  question: question,
+                  isMistake: true,
+                  onVariantPressed: () {
+                    _pageController.animateToPage(index + 1,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.linear);
+                  },
+                ),
+              ),
+            );
           }
-          print(question.questionId);
-          return BlocProvider.value(
-            value: _blocCache['${question.mistakeQuestionId}+$index']!,
-            key:
-                PageStorageKey('Question_${question.mistakeQuestionId}$index}'),
-            child: QuestionWidget(question: question, isMistake: true,),
-          );
         },
       ),
     );

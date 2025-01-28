@@ -21,11 +21,7 @@ class MistakeBloc extends Bloc<QuestionEvent, MistakeState> {
 
   Future<void> _onGetQuestionRequested(
       GetMistakeRequested event, Emitter<MistakeState> emit) async {
-    if (isFetchingNextPage) return;
-
-    if (state is MistakeInitial || state is MistakeError) {
-      emit(MistakeLoading());
-    }
+    emit(MistakeLoading());
 
     final questionsOrFailure = await getMistakes(params: NoParams());
 
@@ -43,7 +39,6 @@ class MistakeBloc extends Bloc<QuestionEvent, MistakeState> {
         isFetchingNextPage = false;
       },
       (questions) {
-        print(questions.isEmpty ? 'Empty set' : 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA$questions');
         emit(MistakeLoaded(questions: questions));
       },
     );
@@ -76,7 +71,7 @@ class MistakeBloc extends Bloc<QuestionEvent, MistakeState> {
         isFetchingNextPage = false;
       },
       (questions) {
-        print(questions.isEmpty ? 'Empty set' : '$questions');
+        // log(questions.isEmpty ? 'Empty set' : '$questions');
         if (state is MistakeLoaded || state is MistakeNextPageLoading) {
           final currentQuestions = (state as MistakeLoaded).questions;
           final List<Question> updatedQuestions = List.from(currentQuestions)
@@ -85,7 +80,7 @@ class MistakeBloc extends Bloc<QuestionEvent, MistakeState> {
           emit(MistakeNextPageLoaded(questions));
           emit(MistakeLoaded(questions: updatedQuestions));
         } else {
-          //   print('bloc ${questions.first.question}');
+          //   log('bloc ${questions.first.question}');
           emit(MistakeLoaded(questions: questions));
         }
         isFetchingNextPage = false;
