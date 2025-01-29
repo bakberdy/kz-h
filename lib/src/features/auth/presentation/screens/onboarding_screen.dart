@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kz_h/generated/l10n.dart';
-import 'package:kz_h/src/features/auth/presentation/widgets/filled_button.dart';
+import 'package:kz_h/src/features/auth/presentation/widgets/my_filled_button.dart';
 
 @RoutePage()
 class OnboardingScreen extends StatelessWidget {

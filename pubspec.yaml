@@ -110,19 +110,21 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
   assets:
-    - lib/assets/icons/back.png
-    - lib/assets/icons/bottom_nav_bar_home.svg
-    - lib/assets/icons/bottom_nav_bar_profile.svg
+    # - lib/assets/icons/back.png
+    # - lib/assets/icons/bottom_nav_bar_home.svg
+    # - lib/assets/icons/bottom_nav_bar_profile.svg
+    # - lib/assets/icons/
+    # #- lib/src/features/home_feed/data/data_sources/sample_data.json
+    # - lib/assets/images/aaa.jpg
+    # - lib/assets/icons/accuracy.svg
+    # - lib/assets/icons/fire.svg
+    # - lib/assets/icons/quiz.svg
+    # - lib/assets/icons/score.svg
+    # - lib/assets/icons/settings.png
+    # - lib/assets/images/KZH-logo.png
+    # - lib/assets/images/splash-bg.png
+    # - lib\assets\images\kzh_logo.svg
+    - lib/assets/images/
     - lib/assets/icons/
-    #- lib/src/features/home_feed/data/data_sources/sample_data.json
-    - lib/assets/images/aaa.jpg
-    - lib/assets/icons/accuracy.svg
-    - lib/assets/icons/fire.svg
-    - lib/assets/icons/quiz.svg
-    - lib/assets/icons/score.svg
-    - lib/assets/icons/settings.png
-    - lib/assets/images/KZH-logo.png
-    - lib/assets/images/splash-bg.png
-    - lib\assets\images\kzh_logo.svg
 flutter_intl:
   enabled: true

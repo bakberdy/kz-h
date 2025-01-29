@@ -61,9 +61,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           right: 20.w,
                           child: GestureDetector(
                               onTap: () {
-                                context.read<AuthBloc>().add(LogOutRequested());
                                 context.router
-                                    .replaceAll([const OnboardingRoute()]);
+                                    .pushNamed('/settings');
                               },
                               child:
                                   Image.asset('lib/assets/icons/settings.png')))

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kz_h/src/core/routes/app_router.gr.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
-import 'package:kz_h/src/features/auth/presentation/widgets/filled_button.dart';
+import 'package:kz_h/src/features/auth/presentation/widgets/my_filled_button.dart';
 
 class WelcomWidget extends StatelessWidget {
   const WelcomWidget({

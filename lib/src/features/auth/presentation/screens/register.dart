@@ -9,7 +9,7 @@ import 'package:kz_h/generated/l10n.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
 import 'package:kz_h/src/features/auth/presentation/blocs/auth_bloc/bloc/auth_bloc.dart';
 import 'package:kz_h/src/features/auth/presentation/widgets/auth_input_field.dart';
-import 'package:kz_h/src/features/auth/presentation/widgets/filled_button.dart';
+import 'package:kz_h/src/features/auth/presentation/widgets/my_filled_button.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 @RoutePage()
