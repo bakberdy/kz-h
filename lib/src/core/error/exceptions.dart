@@ -27,3 +27,9 @@ class AuthException implements Exception {
   @override
   String toString() => message;
 }
+
+class TokenInspiredException implements Exception{
+  final String message;
+
+  TokenInspiredException([this.message='Token inspired']);
+}

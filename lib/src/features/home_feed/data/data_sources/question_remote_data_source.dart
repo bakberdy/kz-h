@@ -18,14 +18,13 @@ class QuestionRemoteDataSourceImpl implements QuestionRemoteDataSource {
   final Dio dio;
   QuestionRemoteDataSourceImpl({required this.dio});
 
-  final URL = 'http://185.32.84.190/api/questions';
 
   @override
   Future<List<QuestionModel>> getQuestions() async {
     //return await loadQuestionLocal();
     try {
       final response = await dio.get(
-        URL,
+        '/questions',
         queryParameters: {"limit": 5},
       );
 
@@ -71,11 +70,13 @@ class QuestionRemoteDataSourceImpl implements QuestionRemoteDataSource {
     try {
       final accessToken =
           await const FlutterSecureStorage().read(key: 'accessToken');
-      final response = await dio.post('$URL/$questionId/answer',
+      final response = await dio.post('/questions/$questionId/answer',
           data: {
             "selectedOptions": [selectedOption]
           },
-          options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
+          options: accessToken != null
+              ? Options(headers: {'Authorization': 'Bearer $accessToken'})
+              : null);
 
       if (response.statusCode == 200) {
         final data = response.data as List;
@@ -112,23 +113,27 @@ class QuestionRemoteDataSourceImpl implements QuestionRemoteDataSource {
   @override
   Future<List<QuestionModel>> getMistakes() async {
     try {
-      final String accessToken = await const FlutterSecureStorage().read(key: 'accessToken')??'';
-      final response = await dio.get(
-        '$URL/mistakes',
-        queryParameters: {"limit": 1000},
-        options: Options(headers: {'Authorization':'Bearer $accessToken'})
-      );
-
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final data = response.data;
-
-
-        final questions =
-            (data as List).map((item) => QuestionModel.fromJson(item)).toList();
-        return questions;
+      final String? accessToken =
+          await const FlutterSecureStorage().read(key: 'accessToken');
+      if (accessToken == null||accessToken=='') {
+        throw AuthException('Unauthorized');
       } else {
-        throw ServerException('Unexpected status code: ${response.statusCode}');
+        final response = await dio.get('/questions/mistakes',
+            queryParameters: {"limit": 1000},
+            options:
+                Options(headers: {'Authorization': 'Bearer $accessToken'}));
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          final data = response.data;
+
+          final questions = (data as List)
+              .map((item) => QuestionModel.fromJson(item))
+              .toList();
+          return questions;
+        } else {
+          throw ServerException(
+              'Unexpected status code: ${response.statusCode}');
+        }
       }
     } on DioException catch (dioError) {
       if (dioError.response != null) {
@@ -162,13 +167,13 @@ class QuestionRemoteDataSourceImpl implements QuestionRemoteDataSource {
     try {
       final accessToken =
           await const FlutterSecureStorage().read(key: 'accessToken');
-      final response = await dio.post('$URL/mistakes/$mistakeQuestionId/answer',
+      final response = await dio.post('/questions/mistakes/$mistakeQuestionId/answer',
           data: {
             "selectedOptions": [selectedOption]
           },
           options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
 
-      if (response.statusCode == 200||response.statusCode == 201) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data as List;
         return data.map((el) => VariantModel.fromJson(el)).toList();
       } else {

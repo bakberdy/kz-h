@@ -9,11 +9,11 @@ abstract interface class AuthLocalDataSource {
   Future<void> deleteAllTokens();
 }
 
+const ACCESS_TOKEN = 'accessToken';
+const REFRESH_TOKEN = 'refreshToken';
+
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   final FlutterSecureStorage _storage;
-
-  final ACCESS_TOKEN = 'accessToken';
-  final REFRESH_TOKEN = 'refreshToken';
 
   AuthLocalDataSourceImpl({required FlutterSecureStorage storage})
       : _storage = storage;

@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:kz_h/generated/l10n.dart';
 import 'package:kz_h/src/core/routes/app_router.gr.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
 import 'package:kz_h/src/core/utils/utils.dart';
+import 'package:kz_h/src/core/widgets/welcome_widget.dart';
 import 'package:kz_h/src/features/auth/domain/entiities/user.dart';
 import 'package:kz_h/src/features/auth/presentation/blocs/auth_bloc/bloc/auth_bloc.dart';
 import 'package:kz_h/src/features/auth/presentation/widgets/statistics_container.dart';
@@ -82,6 +82,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       User? user;
                       if (state is Authenticated) {
                         user = state.user;
+                      } else if (state is UnAuthenticated ||
+                          state is AuthInitial) {
+                        return const Padding(
+                          padding: EdgeInsets.all(22.0),
+                          child: WelcomWidget(),
+                        );
                       }
                       return Skeletonizer(
                         enabled: state is! Authenticated,
@@ -171,7 +177,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       );
                     },
-                    
                   )
                 ],
               ),
@@ -182,3 +187,4 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
+

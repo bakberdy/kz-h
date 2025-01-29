@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,7 +17,7 @@ class OnboardingScreen extends StatelessWidget {
           decoration: const BoxDecoration(
             image: DecorationImage(
                 fit: BoxFit.cover,
-                image: AssetImage(   
+                image: AssetImage(
                   'lib/assets/images/splash-bg.png',
                 )),
           ),
@@ -39,22 +38,27 @@ class OnboardingScreen extends StatelessWidget {
                     height: 60.h,
                     width: 354.w,
                     child: MyFilledButton(
-                      bgColor: const Color(0xff5348F2),
-                      onPressed: () {
-                        context.router.pushNamed('/login');
-                       },text: S.of(context).login),
+                        bgColor: const Color(0xff5348F2),
+                        onPressed: () {
+                          context.router.pushNamed('/login');
+                        },
+                        text: S.of(context).login),
                   ),
                   SizedBox(
                     height: 20.h,
                   ),
                   SizedBox(
-                    height: 60.h,
-                    width: 354.w,
-                    child:MyFilledButton(text: S.of(context).register, onPressed: () {
-                          AutoRouter.of(context).pushNamed('/register');
-                        }, bgColor: const Color(0xff272727))   
-                  ),
-                  SizedBox(height: 120.h,)
+                      height: 60.h,
+                      width: 354.w,
+                      child: MyFilledButton(
+                          text: S.of(context).register,
+                          onPressed: () {
+                            AutoRouter.of(context).pushNamed('/register');
+                          },
+                          bgColor: const Color(0xff272727))),
+                  SizedBox(
+                    height: 120.h,
+                  )
                 ],
               ),
             ],
@@ -62,4 +66,3 @@ class OnboardingScreen extends StatelessWidget {
     );
   }
 }
-

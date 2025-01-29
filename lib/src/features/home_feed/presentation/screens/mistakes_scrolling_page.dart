@@ -1,9 +1,15 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:kz_h/injection_container.dart';
+import 'package:kz_h/src/core/routes/app_router.gr.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
+import 'package:kz_h/src/core/widgets/svg_icon.dart';
+import 'package:kz_h/src/core/widgets/welcome_widget.dart';
+import 'package:kz_h/src/features/auth/presentation/blocs/auth_bloc/bloc/auth_bloc.dart';
 import 'package:kz_h/src/features/home_feed/presentation/blocs/mistakes/mistake_bloc.dart';
 import 'package:kz_h/src/features/home_feed/presentation/blocs/question/question_bloc.dart';
 import 'package:kz_h/src/features/home_feed/presentation/blocs/variant/variant_bloc.dart';
@@ -43,36 +49,56 @@ class _MistakesScrollingPageState extends State<MistakesScrollingPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return BlocConsumer<MistakeBloc, MistakeState>(
-      listener: (context, state) {
-        if (state is NextPageLoaded) {
-          BotToast.closeAllLoading();
-        } else if (state is MistakeError) {
-          BotToast.closeAllLoading();
-          BotToast.showText(text: state.message, contentColor: Colors.red);
-        }
-      },
+    return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        if (state is MistakeLoading) {
-          return _buildLoadingIndicator();
-        }else if (state is MistakeError) {
-          return InkWell(
-            onTap: (){
-              _fetchQuestions();
-            },
-            highlightColor: AppColors.darkBgColor,
-            splashColor: AppColors.bottomNavigationBarColor,
-              child: Center(
-            child: Text(state.message, style: const TextStyle(color: Colors.white),),
-          ));
+        if (state is UnAuthenticated || state is AuthInitial) {
+          return Column(
+            children: [
+              SizedBox(height: 100.h,),
+              SvgPicture.asset('lib/assets/images/kzh_logo.svg'),
+              const Center(
+                  child: Padding(
+                padding: EdgeInsets.all(22.0),
+                child: WelcomWidget(),
+              )),
+            ],
+          );
         }
+        return BlocConsumer<MistakeBloc, MistakeState>(
+          listener: (context, state) {
+            if (state is NextPageLoaded) {
+              BotToast.closeAllLoading();
+            } else if (state is MistakeError) {
+              BotToast.closeAllLoading();
+              BotToast.showText(text: state.message, contentColor: Colors.red);
+            }
+          },
+          builder: (context, state) {
+            if (state is MistakeLoading) {
+              return _buildLoadingIndicator();
+            } else if (state is MistakeError) {
+              return InkWell(
+                  onTap: () {
+                    _fetchQuestions();
+                  },
+                  highlightColor: AppColors.darkBgColor,
+                  splashColor: AppColors.bottomNavigationBarColor,
+                  child: Center(
+                    child: Text(
+                      state.message,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ));
+            }
 
-        if (state is MistakeLoaded || state is MistakeNextPageLoading) {
-          return _buildScrollableView(state);
-        }
-        return InkWell(
-          onTap: () {
-            context.read<MistakeBloc>().add(GetMistakeRequested());
+            if (state is MistakeLoaded || state is MistakeNextPageLoading) {
+              return _buildScrollableView(state);
+            }
+            return InkWell(
+              onTap: () {
+                context.read<MistakeBloc>().add(GetMistakeRequested());
+              },
+            );
           },
         );
       },

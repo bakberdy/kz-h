@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -21,6 +22,7 @@ void main() {
     BlocProvider(create: (_) => di.sl<HomeScreenPagesCubit>()),
     BlocProvider(create: (_) => di.sl<AuthBloc>()),
   ], child: MyApp(appRouter: di.sl<AppRouter>())));
+
 }
 
 class MyApp extends StatelessWidget {
@@ -33,8 +35,6 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
         designSize: const Size(402, 874),
         builder: (context, child) {
-          // return BlocBuilder<AuthBloc, AuthState>(
-          // builder: (context, state) {
           return MaterialApp.router(
             localizationsDelegates: const [
               S.delegate,
@@ -43,18 +43,14 @@ class MyApp extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
             locale: const Locale('kk'),
-            supportedLocales:const [ Locale('ru'), Locale('kk')],
+            supportedLocales: const [Locale('ru'), Locale('kk')],
             builder: (context, child) => BotToastInit()(context, child),
             routerConfig: appRouter.config(),
             darkTheme: appTheme,
             debugShowCheckedModeBanner: false,
             themeMode: ThemeMode.dark,
             theme: appTheme,
-            // routeInformationParser: appRouter.defaultRouteParser(),
-            //routerDelegate: appRouter.delegate(),
           );
-          // },
-          // );
         });
   }
 }

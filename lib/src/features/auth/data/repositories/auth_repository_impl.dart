@@ -20,71 +20,37 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, User>> getUserInfo() async {
-    if (await networkInfo.isConnected) {
-      try {
-        final accessToken = await authLocalDataSource.getAccessToken();
-        final User user =
-            await authRemoteDataSource.getUserInfo(accessToken: accessToken);
-        return Right(user);
-      } catch (e) {
-        if (e is ServerException) {
-          return Left(ServerFailure(e.message));
-        } else if (e is TokenNotFoundException) {
-          return Left(CacheFailure(e.message));
-        } else {
-          return Left(AuthFailure(e.toString()));
-        }
-      }
-    } else {
-      return Left(NetworkFailure());
-    }
+    return _handleError(() async {
+      final accessToken = await authLocalDataSource.getAccessToken();
+      final User user =
+          await authRemoteDataSource.getUserInfo(accessToken: accessToken);
+      return user;
+    });
   }
 
   @override
   Future<Either<Failure, User>> login(
       {required String email, required String password}) async {
-    if (await networkInfo.isConnected) {
-      try {
-        final AuthInfo userInfo = await authRemoteDataSource.login(
-            emailOrUsername: email, password: password);
-        await authLocalDataSource.saveAccessToken(userInfo.accessToken);
-        await authLocalDataSource.saveRefreshToken(userInfo.refreshToken);
-        final user = await authRemoteDataSource.getUserInfo(
-            accessToken: userInfo.accessToken);
-        return Right(user);
-      } catch (e) {
-        if (e is ServerException) {
-          return Left(ServerFailure(e.message));
-        } else {
-          return Left(AuthFailure(e.toString()));
-        }
-      }
-    } else {
-      return Left(NetworkFailure());
-    }
+    return _handleError(() async {
+      final AuthInfo userInfo = await authRemoteDataSource.login(
+          emailOrUsername: email, password: password);
+      await authLocalDataSource.saveAccessToken(userInfo.accessToken);
+      await authLocalDataSource.saveRefreshToken(userInfo.refreshToken);
+      final user = await authRemoteDataSource.getUserInfo(
+          accessToken: userInfo.accessToken);
+      return user;
+    });
   }
 
   @override
   Future<Either<Failure, String>> refresh() async {
-    if (await networkInfo.isConnected) {
-      try {
-        final String refreshToken = await authLocalDataSource.getRefreshToken();
-        final String accessToken =
-            await authRemoteDataSource.refresh(refreshToken: refreshToken);
-        await authLocalDataSource.saveAccessToken(accessToken);
-        return Right(accessToken);
-      } catch (e) {
-        if (e is ServerException) {
-          return Left(ServerFailure(e.message));
-        } else if (e is TokenNotFoundException) {
-          return Left(CacheFailure(e.message));
-        } else {
-          return Left(AuthFailure(e.toString()));
-        }
-      }
-    } else {
-      return Left(NetworkFailure());
-    }
+    return _handleError(() async {
+      final String refreshToken = await authLocalDataSource.getRefreshToken();
+      final String accessToken =
+          await authRemoteDataSource.refresh(refreshToken: refreshToken);
+      await authLocalDataSource.saveAccessToken(accessToken);
+      return accessToken;
+    });
   }
 
   @override
@@ -93,23 +59,42 @@ class AuthRepositoryImpl implements AuthRepository {
       required String password,
       required String confirmPassword,
       required String email}) async {
+    return _handleError(() async {
+      await authRemoteDataSource.register(
+          email: email,
+          password: password,
+          confirmPassword: confirmPassword,
+          username: username);
+      final AuthInfo userInfo = await authRemoteDataSource.login(
+          emailOrUsername: email, password: password);
+      await authLocalDataSource.saveAccessToken(userInfo.accessToken);
+      await authLocalDataSource.saveRefreshToken(userInfo.refreshToken);
+      final user = await authRemoteDataSource.getUserInfo(
+          accessToken: userInfo.accessToken);
+      return user;
+    });
+  }
+
+  @override
+  Future<void> logOut() async {
+    await authLocalDataSource.deleteAllTokens();
+    await authRemoteDataSource.logOut();
+  }
+
+  @override
+  Future<bool> isLogined() {
+    throw UnimplementedError();
+  }
+
+  Future<Either<Failure, T>> _handleError<T>(Future<T> Function() body) async {
     if (await networkInfo.isConnected) {
       try {
-        await authRemoteDataSource.register(
-            email: email,
-            password: password,
-            confirmPassword: confirmPassword,
-            username: username);
-        final AuthInfo userInfo = await authRemoteDataSource.login(
-            emailOrUsername: email, password: password);
-        await authLocalDataSource.saveAccessToken(userInfo.accessToken);
-        await authLocalDataSource.saveRefreshToken(userInfo.refreshToken);
-        final user = await authRemoteDataSource.getUserInfo(
-            accessToken: userInfo.accessToken);
-        return Right(user);
+        return Right(await body());
       } catch (e) {
         if (e is ServerException) {
           return Left(ServerFailure(e.message));
+        } else if (e is TokenNotFoundException) {
+          return Left(CacheFailure(e.message));
         } else {
           return Left(AuthFailure(e.toString()));
         }
@@ -117,15 +102,5 @@ class AuthRepositoryImpl implements AuthRepository {
     } else {
       return Left(NetworkFailure());
     }
-  }
-
-  @override
-  Future<void> logOut() async {
-    await authLocalDataSource.deleteAllTokens();
-  }
-
-  @override
-  Future<bool> isLogined() {
-    throw UnimplementedError();
   }
 }

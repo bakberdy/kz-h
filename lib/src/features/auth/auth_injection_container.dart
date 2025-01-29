@@ -16,10 +16,9 @@ final sl = GetIt.instance;
 
 Future<void> initAuthDi() async{
   //data
-  sl.registerLazySingleton<Dio>(() => Dio());
   sl.registerLazySingleton<FlutterSecureStorage>(()=>const FlutterSecureStorage());
   sl.registerLazySingleton<AuthRemoteDataSource>(
-      () => AuthRemoteDataSourceImpl(dio: sl()));
+      () => AuthRemoteDataSourceImpl(dioClient: sl()));
   sl.registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSourceImpl(storage: sl()));
 
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(

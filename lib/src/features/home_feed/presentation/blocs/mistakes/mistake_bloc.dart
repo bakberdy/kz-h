@@ -30,6 +30,8 @@ class MistakeBloc extends Bloc<QuestionEvent, MistakeState> {
         var errorMessage = "";
         if (failure is ServerFailure) {
           errorMessage = failure.message;
+        } else if (failure is AuthFailure) {
+          errorMessage = "You are not authorized";
         } else if (failure is NetworkFailure) {
           errorMessage = "Please check your network connection";
         } else {

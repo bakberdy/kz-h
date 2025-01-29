@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:kz_h/src/core/error/exceptions.dart';
 
 import 'package:kz_h/src/core/error/failures.dart';
 import 'package:kz_h/src/features/home_feed/data/data_sources/question_remote_data_source.dart';
@@ -69,10 +70,14 @@ class QuestionRepositoryImpl implements QuestionRepository {
       try {
         final List<QuestionModel> questions =
             await questionRemoteDataSource.getMistakes();
-        // print('repa impl ${questions.first.question}');
         return Right(questions);
       } catch (e) {
-        return Left(ServerFailure());
+        if(e is AuthException){
+          return Left(AuthFailure(e.message));
+        }else if(e is ServerException){
+          return Left(ServerFailure(e.message));
+        }
+        return Left(ServerFailure('Unknown error'));
       }
     } else {
       return Left(NetworkFailure());

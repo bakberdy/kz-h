@@ -17,11 +17,12 @@ import 'package:kz_h/src/features/home_feed/presentation/blocs/variant/variant_b
 
 final sl = GetIt.instance;
 
-Future<void> initHomeDi() async{
- 
+Future<void> initHomeDi() async {
+  
   // Data Layer
-  sl.registerLazySingleton<QuestionRemoteDataSource>(
-      () => QuestionRemoteDataSourceImpl(dio: Dio()));
+  sl.registerLazySingleton<QuestionRemoteDataSource>(() =>
+      QuestionRemoteDataSourceImpl(
+          dio: sl()));
   sl.registerLazySingleton<QuestionRepository>(() => QuestionRepositoryImpl(
         networkInfo: sl(),
         questionRemoteDataSource: sl(),
@@ -29,14 +30,14 @@ Future<void> initHomeDi() async{
 
   // Domain Layer
   sl.registerLazySingleton(() => GetQuestions(sl()));
-  sl.registerFactory(()=>AnswerToQuestion(sl()));
-  sl.registerLazySingleton(()=>GetMistakes(sl()));
-  sl.registerLazySingleton(()=> AnswerToMistake(sl()));
+  sl.registerFactory(() => AnswerToQuestion(sl()));
+  sl.registerLazySingleton(() => GetMistakes(sl()));
+  sl.registerLazySingleton(() => AnswerToMistake(sl()));
 
   // Presentation Layer
   sl.registerFactory(() => QuestionBloc(getQuestions: sl()));
-  sl.registerFactory(()=> HomeScreenPagesCubit());
-  sl.registerFactory(()=> VariantBloc(answerToQuestion: sl(), answerToMistake: sl()));
-  sl.registerFactory(()=> MistakeBloc(getMistakes: sl()));
+  sl.registerFactory(() => HomeScreenPagesCubit());
+  sl.registerFactory(
+      () => VariantBloc(answerToQuestion: sl(), answerToMistake: sl()));
+  sl.registerFactory(() => MistakeBloc(getMistakes: sl()));
 }
-
