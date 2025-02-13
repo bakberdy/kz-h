@@ -1,0 +1,16 @@
+flutter_native_splash:
+  color: "#ffffff"
+  image: lib/assets/images/kzh_logo.png
+  branding: lib/assets/images/branding.png
+  branding_bottom_padding: 24
+  color_dark: "#121212"
+  image_dark: lib/assets/images/kzh_logo.png
+  branding_dark: lib/assets/images/branding.png
+
+  android_12:
+    image: lib/assets/images/kzh_logo.png
+    icon_background_color: "#ffffff"
+    image_dark: lib/assets/images/kzh_logo.png
+    icon_background_color_dark: "#121212"
+
+  web: false

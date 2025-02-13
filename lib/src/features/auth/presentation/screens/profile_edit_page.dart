@@ -1,12 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
 import 'package:kz_h/src/core/utils/show_accept_to_back_dialog.dart';
 import 'package:kz_h/src/core/widgets/my_outlined_button.dart';
+import 'package:kz_h/src/features/auth/presentation/blocs/auth_bloc/bloc/auth_bloc.dart';
 import 'package:kz_h/src/features/auth/presentation/widgets/edit_input_field.dart';
-import 'package:kz_h/src/features/auth/presentation/widgets/my_filled_button.dart';
 import 'package:kz_h/src/features/auth/presentation/widgets/small_filled_button.dart';
 
 @RoutePage()
@@ -49,92 +50,98 @@ class ProfileEditPage extends StatelessWidget {
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 32.0.w),
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  height: 125.r,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle, color: Color(0xff7D7D7D)),
-                ),
-                const SizedBox(
-                  height: 7,
-                ),
-                SmallFilledButton(
-                  secondaryColor: secondaryColor,
-                  text: 'Edit avatar',
-                  onTap: () {},
-                ),
-                const SizedBox(height: 20),
-                const EditInputField(
-                    secondaryColor: secondaryColor, label: 'Username'),
-                const EditInputField(
-                    secondaryColor: secondaryColor, label: 'First name'),
-                const EditInputField(
-                    secondaryColor: secondaryColor, label: 'Last name'),
-                const EditInputField(
-                    secondaryColor: secondaryColor, label: 'Email'),
-                Row(
+            child: BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                final userInfo = state is Authenticated?state.user:null;
+                return Column(
                   children: [
-                    Text('Email not verified.',
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: AppColors.secondaryTextColor,
-                        )),
-                    SizedBox(width: 3),
-                    Text('Verify now',
-                        style: TextStyle(
-                          decorationColor: Color(0xff5348F2),
-                          decoration: TextDecoration.underline,
-                          fontSize: 10,
-                          color: Color(0xff5348F2),
-                        )),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: SaveChangesButton(
-                    themeData: themeData,
-                    onTap: () {},
-                    isEnabled: true,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Divider(thickness: 1, color: Color(0xff91898C)),
-                SizedBox(height: 5),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Password',
-                        style: themeData.textTheme.labelSmall
-                            ?.copyWith(letterSpacing: -0.5)),
+                    Container(
+                      height: 125.r,
+                      decoration: const BoxDecoration(
+                          shape: BoxShape.circle, color: Color(0xff7D7D7D)),
+                    ),
+                    const SizedBox(
+                      height: 7,
+                    ),
                     SmallFilledButton(
-                        secondaryColor: secondaryColor,
-                        text: 'Change password',
-                        onTap: () {})
+                      secondaryColor: secondaryColor,
+                      text: 'Edit avatar',
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 20),
+                     EditInputField(
+                        secondaryColor: secondaryColor, label: 'Username',hintText: userInfo?.username,),
+                     EditInputField(
+                        secondaryColor: secondaryColor, label: 'First name', hintText: userInfo?.fullName?.split(" ")[0],),
+                     EditInputField(
+                        secondaryColor: secondaryColor, label: 'Last name', hintText: userInfo?.fullName?.split(" ")[1],),
+                     EditInputField(
+                        secondaryColor: secondaryColor, label: 'Email', hintText: userInfo?.email,),
+                    Row(
+                      children: [
+                        Text('Email not verified.',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: AppColors.secondaryTextColor,
+                            )),
+                        SizedBox(width: 3),
+                        Text('Verify now',
+                            style: TextStyle(
+                              decorationColor: Color(0xff5348F2),
+                              decoration: TextDecoration.underline,
+                              fontSize: 10,
+                              color: Color(0xff5348F2),
+                            )),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: SaveChangesButton(
+                        themeData: themeData,
+                        onTap: () {},
+                        isEnabled: true,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Divider(thickness: 1, color: Color(0xff91898C)),
+                    SizedBox(height: 5),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Password',
+                            style: themeData.textTheme.labelSmall
+                                ?.copyWith(letterSpacing: -0.5)),
+                        SmallFilledButton(
+                            secondaryColor: secondaryColor,
+                            text: 'Change password',
+                            onTap: () {})
+                      ],
+                    ),
+                    SizedBox(height: 5),
+                    Divider(thickness: 1, color: Color(0xff91898C)),
+                    SizedBox(height: 5),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Delete my account',
+                            style: themeData.textTheme.labelSmall
+                                ?.copyWith(letterSpacing: -0.5)),
+                        SizedBox(
+                            height: 25.h,
+                            width: 120.w,
+                            child:
+                                MyOutlinedButton(text: 'Delete', onTap: () {})),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 100,
+                    )
                   ],
-                ),
-                SizedBox(height: 5),
-                Divider(thickness: 1, color: Color(0xff91898C)),
-                SizedBox(height: 5),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Delete my account',
-                        style: themeData.textTheme.labelSmall
-                            ?.copyWith(letterSpacing: -0.5)),
-                    SizedBox(
-                        height: 25.h,
-                        width: 120.w,
-                        child: MyOutlinedButton(text: 'Delete', onTap: () {}))
-                  ],
-                ),
-                const SizedBox(
-                  height: 100,
-                )
-              ],
+                );
+              },
             ),
           ),
         ),

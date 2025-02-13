@@ -11,10 +11,12 @@ class DioClient {
       Map<String, dynamic>? headers,
       Object? data}) async {
     return _exceptionChecker(() async {
-      return await dio.get(path,
+      final response = await dio.get(path,
           queryParameters: queryParameters,
           options: Options(headers: headers),
           data: data);
+
+      return response;
     });
   }
 
@@ -23,10 +25,12 @@ class DioClient {
       Map<String, dynamic>? headers,
       Object? data}) async {
     return _exceptionChecker(() async {
-      return await dio.post(path,
+      final response = await dio.post(path,
           queryParameters: queryParameters,
           options: Options(headers: headers),
           data: data);
+
+      return response;
     });
   }
 
@@ -47,7 +51,7 @@ class DioClient {
           throw ServerException('Error $statusCode: $errorData');
         }
       } else {
-        throw ServerException('Network error: ${dioError.message}');
+        throw ServerException('Please check your internet connection and try again');
       }
     } catch (e) {
       rethrow;

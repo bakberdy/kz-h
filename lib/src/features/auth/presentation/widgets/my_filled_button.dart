@@ -25,7 +25,7 @@ class MyFilledButton extends StatelessWidget {
           shape: WidgetStatePropertyAll(RoundedRectangleBorder(
               side: borderColor != null
                   ? BorderSide(color: borderColor!, width: 1)
-                  : const BorderSide(),
+                  : BorderSide.none,
               borderRadius: BorderRadius.circular(32.r))),
         ),
         child: Text(text,

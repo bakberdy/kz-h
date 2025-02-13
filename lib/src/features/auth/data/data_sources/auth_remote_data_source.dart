@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:developer';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:kz_h/src/core/dio/dio_client.dart';
 import 'package:kz_h/src/core/utils/get_device_info.dart';
 import 'package:kz_h/src/features/auth/data/data_sources/auth_local_data_source.dart';
@@ -17,9 +16,9 @@ abstract interface class AuthRemoteDataSource {
     required String password,
     required String confirmPassword,
   });
-  Future<String> refresh({required String refreshToken});
+  Future<AuthInfo> refresh({required String refreshToken});
   Future<User> getUserInfo({required String accessToken});
-  Future<void> logOut();
+  Future<void> logOut({required String accessToken});
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -28,12 +27,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl({required this.dioClient});
 
   @override
-  Future<AuthInfo> login({
-    required String emailOrUsername,
-    required String password,
-  }) async {
+Future<AuthInfo> login({
+  required String emailOrUsername,
+  required String password,
+}) async {
+
+  try {
     final deviceInfo = await getDeviceInfo();
-    print(deviceInfo);
+
     final response = await dioClient.post(
       headers: {'User-agent': deviceInfo},
       '/auth/login',
@@ -47,11 +48,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     final String accessToken = data['access_token'] as String;
     final String refreshToken = data['refresh_token'] as String;
 
+
     return AuthInfo(refreshToken: refreshToken, accessToken: accessToken);
+  } catch (e) {
+    rethrow; 
   }
+}
 
   @override
-  Future<String> refresh({required String refreshToken}) async {
+  Future<AuthInfo> refresh({required String refreshToken}) async {
     final deviceInfo = await getDeviceInfo();
     final response = await dioClient.post('/auth/refresh', headers: {
       "Authorization": 'Bearer $refreshToken',
@@ -60,7 +65,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     final data = response.data as Map;
     final String accessToken = data[ACCESS_TOKEN];
-    return accessToken;
+    final String newRefreshToken = data[REFRESH_TOKEN];
+    return AuthInfo(refreshToken: newRefreshToken, accessToken: accessToken);
   }
 
   @override
@@ -88,7 +94,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
   
   @override
-  Future<void> logOut() async{
-    await dioClient.get('/auth/logout');
+  Future<void> logOut({required String accessToken}) async{
+   await dioClient.get('/auth/logout', headers: {"Authorization": 'Bearer $accessToken'});
   }
 }

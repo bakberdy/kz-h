@@ -55,7 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Center(
                               child: Image.asset(
                                   fit: BoxFit.cover,
-                                  'lib/assets/images/KZH-logo.png'))),
+                                  'lib/assets/images/kzh_logo.png'))),
                       Positioned(
                           top: 20.h,
                           right: 20.w,

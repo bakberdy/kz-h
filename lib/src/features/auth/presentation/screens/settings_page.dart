@@ -1,11 +1,13 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
 import 'package:kz_h/src/core/utils/show_accept_to_back_dialog.dart';
 import 'package:kz_h/src/core/widgets/my_outlined_button.dart';
+import 'package:kz_h/src/features/auth/presentation/blocs/auth_bloc/bloc/auth_bloc.dart';
 
 @RoutePage()
 class SettingsPage extends StatelessWidget {
@@ -82,7 +84,9 @@ class SettingsPage extends StatelessWidget {
                   width: constraints.maxWidth,
                   child: MyOutlinedButton(
                     text: 'Log out',
-                    onTap: () {},
+                    onTap: () {
+                      context.read<AuthBloc>().add(LogOutRequested());
+                    },
                   ),
                 ),
               ],

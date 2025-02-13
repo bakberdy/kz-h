@@ -3,9 +3,9 @@ import 'package:kz_h/src/core/error/exceptions.dart';
 
 abstract interface class AuthLocalDataSource {
   Future<void> saveAccessToken(String accessToken);
-  Future<String> getAccessToken();
+  Future<String?> getAccessToken();
   Future<void> saveRefreshToken(String refreshToken);
-  Future<String> getRefreshToken();
+  Future<String?> getRefreshToken();
   Future<void> deleteAllTokens();
 }
 
@@ -19,23 +19,15 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       : _storage = storage;
 
   @override
-  Future<String> getAccessToken() async {
+  Future<String?> getAccessToken() async {
     final String? token = await _storage.read(key: ACCESS_TOKEN);
-    if (token != null) {
-      return token;
-    } else {
-      throw TokenNotFoundException("Access token not found");
-    }
+    return token;
   }
 
   @override
-  Future<String> getRefreshToken() async {
+  Future<String?> getRefreshToken() async {
     final String? token = await _storage.read(key: REFRESH_TOKEN);
-    if (token != null) {
-      return token;
-    } else {
-      throw TokenNotFoundException("Refresh token not found");
-    }
+    return token;
   }
 
   @override

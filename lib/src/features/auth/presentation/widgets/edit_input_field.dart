@@ -45,6 +45,8 @@ class EditInputField extends StatelessWidget {
               focusedBorder: outlineInputBorder,
               enabledBorder: outlineInputBorder,
               disabledBorder: outlineInputBorder,
+              hintText: hintText,
+              hintStyle: themeData.textTheme.bodyMedium
             ),
           ),
         ),

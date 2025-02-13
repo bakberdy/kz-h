@@ -20,7 +20,6 @@ class QuestionRepositoryImpl implements QuestionRepository {
 
   @override
   Future<Either<Failure, List<Question>>> getQuestions() async {
-    if (await networkInfo.isConnected) {
       try {
         final List<QuestionModel> questions =
             await questionRemoteDataSource.getQuestions();
@@ -29,44 +28,33 @@ class QuestionRepositoryImpl implements QuestionRepository {
       } catch (e) {
         return Left(ServerFailure());
       }
-    } else {
-      return Left(NetworkFailure());
-    }
-  }
+    } 
+  
 
   @override
   Future<Either<Failure, List<Variant>>> answerToQuestion(
       String quesitonId, String selectedOption) async {
-    if (await networkInfo.isConnected) {
       try {
         return Right(await questionRemoteDataSource.answerToQuestion(
             quesitonId, selectedOption));
       } catch (e) {
         return Left(ServerFailure());
       }
-    } else {
-      return Left(NetworkFailure());
-    }
   }
 
   @override
   Future<Either<Failure, List<Variant>>> answerToMistake(
       String quesitonId, String selectedOption) async {
-    if (await networkInfo.isConnected) {
       try {
         return Right(await questionRemoteDataSource.answerToMistake(
             quesitonId, selectedOption));
       } catch (e) {
         return Left(ServerFailure());
       }
-    } else {
-      return Left(NetworkFailure());
-    }
   }
 
   @override
   Future<Either<Failure, List<Question>>> getMistakes() async {
-    if (await networkInfo.isConnected) {
       try {
         final List<QuestionModel> questions =
             await questionRemoteDataSource.getMistakes();
@@ -79,8 +67,5 @@ class QuestionRepositoryImpl implements QuestionRepository {
         }
         return Left(ServerFailure('Unknown error'));
       }
-    } else {
-      return Left(NetworkFailure());
-    }
   }
 }

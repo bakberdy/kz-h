@@ -19,7 +19,6 @@ class BottomNavigationBarPage extends StatelessWidget {
         return PreferredSize(
           preferredSize: Size.fromHeight(100.h),
           child: BottomNavigationBar(
-            
             backgroundColor: AppColors.bottomNavigationBarColor,
             currentIndex: tabsRouter.activeIndex,
             onTap: tabsRouter.setActiveIndex,

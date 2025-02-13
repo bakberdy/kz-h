@@ -22,7 +22,7 @@ Future<void> initHomeDi() async {
   // Data Layer
   sl.registerLazySingleton<QuestionRemoteDataSource>(() =>
       QuestionRemoteDataSourceImpl(
-          dio: sl()));
+          dioClient: sl()));
   sl.registerLazySingleton<QuestionRepository>(() => QuestionRepositoryImpl(
         networkInfo: sl(),
         questionRemoteDataSource: sl(),

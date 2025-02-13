@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kz_h/src/features/auth/data/data_sources/auth_local_data_source.dart';
@@ -8,7 +7,6 @@ import 'package:kz_h/src/features/auth/domain/repositories/auth_repository.dart'
 import 'package:kz_h/src/features/auth/domain/usecases/get_user_info.dart';
 import 'package:kz_h/src/features/auth/domain/usecases/log_out.dart';
 import 'package:kz_h/src/features/auth/domain/usecases/login.dart';
-import 'package:kz_h/src/features/auth/domain/usecases/refresh.dart';
 import 'package:kz_h/src/features/auth/domain/usecases/register.dart';
 import 'package:kz_h/src/features/auth/presentation/blocs/auth_bloc/bloc/auth_bloc.dart';
 
@@ -30,7 +28,6 @@ Future<void> initAuthDi() async{
   sl.registerLazySingleton(() => GetUserInfoUseCase(sl()));
   sl.registerLazySingleton(() => LogOut(sl()));
   sl.registerLazySingleton(() => Login(sl()));
-  sl.registerLazySingleton(() => Refresh(sl()));
   sl.registerLazySingleton(() => Register(sl()));
 
   //presentation
@@ -38,6 +35,5 @@ Future<void> initAuthDi() async{
       logOut: sl(),
       getUserInfo: sl(),
       login: sl(),
-      register: sl(),
-      refresh: sl()));
+      register: sl(),));
 }
