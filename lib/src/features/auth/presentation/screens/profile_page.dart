@@ -59,13 +59,19 @@ class _ProfilePageState extends State<ProfilePage> {
                       Positioned(
                           top: 20.h,
                           right: 20.w,
-                          child: GestureDetector(
+                          child: InkWell(
+                            highlightColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            focusColor: Colors.transparent,
                               onTap: () {
                                 context.router
                                     .pushNamed('/settings');
                               },
                               child:
-                                  Image.asset('lib/assets/icons/settings.png')))
+                                  SizedBox(
+                                    height: 40,
+                                    width: 40,
+                                    child: Image.asset('lib/assets/icons/settings.png'))))
                     ],
                   ),
                   BlocConsumer<AuthBloc, AuthState>(

@@ -106,35 +106,39 @@ class _TestScrollingPageState extends State<TestScrollingPage>
       onRefresh: () async {
         _fetchQuestions();
       },
-      child: PageView.builder(
-        controller: _pageController,
-        scrollDirection: Axis.vertical,
-        itemCount: questions.length,
-        itemBuilder: (BuildContext context, int index) {
-          if (index == questions.length - 1) {
-            _loadNextPage();
-          }
-          final question = questions[index];
-
-          if (!_blocCache.containsKey('${question.questionId}+$index')) {
-            _blocCache['${question.questionId}+$index'] = sl<VariantBloc>();
-          }
-          return SingleChildScrollView(
-            child: BlocProvider.value(
-              value: _blocCache['${question.questionId}+$index']!,
-              key: PageStorageKey('${question.questionId}+$index'),
-              child: QuestionWidget(
-                question: question,
-                isMistake: false,
-                onVariantPressed: () {
-                  _pageController.animateToPage(1 + index,
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.linear);
-                },
-              ),
-            ),
-          );
-        },
+      child: Column(
+        children: [
+          PageView.builder(
+            controller: _pageController,
+            scrollDirection: Axis.vertical,
+            itemCount: questions.length,
+            itemBuilder: (BuildContext context, int index) {
+              if (index == questions.length - 1) {
+                _loadNextPage();
+              }
+              final question = questions[index];
+          
+              if (!_blocCache.containsKey('${question.questionId}+$index')) {
+                _blocCache['${question.questionId}+$index'] = sl<VariantBloc>();
+              }
+              return SingleChildScrollView(
+                child: BlocProvider.value(
+                  value: _blocCache['${question.questionId}+$index']!,
+                  key: PageStorageKey('${question.questionId}+$index'),
+                  child: QuestionWidget(
+                    question: question,
+                    isMistake: false,
+                    onVariantPressed: () {
+                      _pageController.animateToPage(1 + index,
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.linear);
+                    },
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

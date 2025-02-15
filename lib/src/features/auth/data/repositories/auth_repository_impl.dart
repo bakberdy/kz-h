@@ -22,6 +22,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, User>> getUserInfo() async {
     return await _handleError(() async {
       final accessToken = await authLocalDataSource.getAccessToken();
+      print(accessToken);
       if(accessToken==null) throw AuthException('Unauthorized');
       final User user =
           await authRemoteDataSource.getUserInfo(accessToken: accessToken);
@@ -76,11 +77,6 @@ class AuthRepositoryImpl implements AuthRepository {
       await authLocalDataSource.deleteAllTokens();
       return;
     });
-  }
-
-  @override
-  Future<bool> isLogined() {
-    throw UnimplementedError();
   }
 
   Future<Either<Failure, T>> _handleError<T>(Future<T> Function() body) async {

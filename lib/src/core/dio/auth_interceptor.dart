@@ -59,15 +59,12 @@ class AuthInterceptor extends Interceptor {
           // Complete the completer to notify any waiting requests.
           _refreshCompleter?.complete();
 
-          // Update the original request with the new access token.
           requestOptions.headers["Authorization"] =
               "Bearer ${authInfo.accessToken}";
 
-          // Retry the original request using the same Dio instance.
           final response = await _dio.fetch(requestOptions);
           handler.resolve(response);
         } catch (refreshError) {
-          // In case of a refresh error, complete the completer with error.
           _refreshCompleter?.completeError(refreshError);
           handler.reject(refreshError is DioException
               ? refreshError
@@ -78,15 +75,12 @@ class AuthInterceptor extends Interceptor {
           _refreshCompleter = null;
         }
       } else {
-        // If a refresh is already in progress, wait for it to complete.
         try {
           await _refreshCompleter?.future;
 
-          // After waiting, get the new token and update the request.
           final newAccessToken = await _localDataSource.getAccessToken();
           requestOptions.headers["Authorization"] = "Bearer $newAccessToken";
 
-          // Retry the request.
           final response = await _dio.fetch(requestOptions);
           handler.resolve(response);
         } catch (error) {
@@ -96,7 +90,6 @@ class AuthInterceptor extends Interceptor {
         }
       }
     } else {
-      // For other errors, pass them along unmodified.
       handler.next(err);
     }
   }

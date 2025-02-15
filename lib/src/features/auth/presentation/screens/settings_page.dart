@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
 import 'package:kz_h/src/core/utils/show_accept_to_back_dialog.dart';
+import 'package:kz_h/src/core/utils/show_error.dart';
 import 'package:kz_h/src/core/widgets/my_outlined_button.dart';
 import 'package:kz_h/src/features/auth/presentation/blocs/auth_bloc/bloc/auth_bloc.dart';
 
@@ -18,22 +19,14 @@ class SettingsPage extends StatelessWidget {
     final themeData = Theme.of(context);
 
     return PopScope(
-      onPopInvokedWithResult: (didPop, result) async {
-        if (didPop) return;
-        final shouldPop = await showAcceptToBackDialog(context) ?? false;
-        if (shouldPop && context.mounted) {
-          context.router.maybePop();
-        }
-      },
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          leading: GestureDetector(
+          leading: InkWell(
+            hoverColor: Colors.transparent,
+            highlightColor: Colors.transparent,
             onTap: () async {
-              final shouldPop = await showAcceptToBackDialog(context) ?? false;
-              if (shouldPop && context.mounted) {
-                context.router.maybePop();
-              }
+              context.router.maybePop();
             },
             child: Padding(
               padding: const EdgeInsets.only(left: 10.0),
@@ -41,58 +34,65 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
         ),
-        body: LayoutBuilder(builder: (context, constraints) {
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 22.0.h),
-            child: Column(
-              children: [
-                Container(
-                  width: constraints.maxWidth,
-                  decoration: BoxDecoration(
-                    border:
-                        Border.all(width: 1, color: const Color(0xff282828)),
-                    borderRadius: BorderRadius.circular(8.r),
+        body: BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if(state is AuthError){
+              showError(state.message);
+            }
+          },
+          child: LayoutBuilder(builder: (context, constraints) {
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: 22.0.h),
+              child: Column(
+                children: [
+                  Container(
+                    width: constraints.maxWidth,
+                    decoration: BoxDecoration(
+                      border:
+                          Border.all(width: 1, color: const Color(0xff282828)),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Column(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(7.r),
+                              topRight: Radius.circular(7.r)),
+                          child: SettingsItemHeader(
+                              text: 'Settings', width: constraints.maxWidth),
+                        ),
+                        SettingsItemButton(
+                            onTap: () {
+                              context.router.pushNamed('/profile_edit');
+                            },
+                            text: 'Profile'),
+                        SettingsItemButton(onTap: () {}, text: 'Preferences'),
+                        SettingsItemButton(onTap: () {}, text: 'Sessions'),
+                        SettingsItemHeader(
+                            text: 'Support', width: constraints.maxWidth),
+                        SettingsItemButton(onTap: () {}, text: 'Help Center'),
+                        SettingsItemButton(onTap: () {}, text: 'About us'),
+                      ],
+                    ),
                   ),
-                  child: Column(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(7.r),
-                            topRight: Radius.circular(7.r)),
-                        child: SettingsItemHeader(
-                            text: 'Settings', width: constraints.maxWidth),
-                      ),
-                      SettingsItemButton(
-                          onTap: () {
-                            context.router.pushNamed('/profile_edit');
-                          },
-                          text: 'Profile'),
-                      SettingsItemButton(onTap: () {}, text: 'Preferences'),
-                      SettingsItemButton(onTap: () {}, text: 'Sessions'),
-                      SettingsItemHeader(
-                          text: 'Support', width: constraints.maxWidth),
-                      SettingsItemButton(onTap: () {}, text: 'Help Center'),
-                      SettingsItemButton(onTap: () {}, text: 'About us'),
-                    ],
+                  SizedBox(
+                    height: 30.h,
                   ),
-                ),
-                SizedBox(
-                  height: 30.h,
-                ),
-                SizedBox(
-                  height: 40.h,
-                  width: constraints.maxWidth,
-                  child: MyOutlinedButton(
-                    text: 'Log out',
-                    onTap: () {
-                      context.read<AuthBloc>().add(LogOutRequested());
-                    },
+                  SizedBox(
+                    height: 40.h,
+                    width: constraints.maxWidth,
+                    child: MyOutlinedButton(
+                      text: 'Log out',
+                      onTap: () {
+                        context.read<AuthBloc>().add(LogOutRequested());
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        }),
+                ],
+              ),
+            );
+          }),
+        ),
       ),
     );
   }

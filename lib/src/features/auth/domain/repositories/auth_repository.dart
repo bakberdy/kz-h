@@ -7,5 +7,4 @@ abstract interface class AuthRepository {
     Future<Either<Failure, User>> register({required String username, required String password, required String confirmPassword, required String email});
     Future<Either<Failure, User>> getUserInfo();
     Future<Either<Failure, void>> logOut();
-    Future<bool> isLogined();
 }

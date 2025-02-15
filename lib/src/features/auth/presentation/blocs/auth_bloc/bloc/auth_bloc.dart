@@ -30,6 +30,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         usernameOrEmail: event.emailOrUsername,
         password: event.password,
       ));
+      
 
       //await Future.delayed(const Duration(seconds: 10));
 
@@ -69,9 +70,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LogOutRequested>((event, emit) async {
       emit(AuthLoading());
 
+      final lastState = state;
+
       final fOrS = await logOut(params: NoParams());
       fOrS.fold((failure) {
-        print("fail ${failure.message}");
+        emit(AuthError(failure.message));
+        emit(lastState);
       }, (success) => emit(UnAuthenticated()));
       emit(UnAuthenticated());
     });

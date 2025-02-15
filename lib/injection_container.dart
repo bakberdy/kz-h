@@ -13,9 +13,14 @@ final sl = GetIt.instance;
 Future<void> initDependencies() async {
   sl.registerSingleton<AppRouter>(AppRouter());
   // Core
-  sl.registerLazySingleton(
-      () => Dio(BaseOptions(baseUrl: 'https://kz-history.kz/api'))..interceptors.add(LoggerInterceptor()));
-    sl.registerLazySingleton(()=>DioClient(dio: sl()));
+  sl.registerLazySingleton(() => Dio(BaseOptions(
+        baseUrl: 'https://kz-history.kz/api',
+        headers: {
+          "Accept-Language": "KAZ",
+        },
+      ))
+        ..interceptors.add(LoggerInterceptor()));
+  sl.registerLazySingleton(() => DioClient(dio: sl()));
   sl.registerLazySingleton(() => InternetConnectionChecker.createInstance());
   sl.registerSingleton<NetworkInfo>(
       NetworkInfoImpl(internetConnectionChecker: sl()));

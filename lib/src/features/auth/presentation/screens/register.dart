@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:form_validation/form_validation.dart';
 import 'package:kz_h/generated/l10n.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
+import 'package:kz_h/src/core/utils/show_error.dart';
 import 'package:kz_h/src/features/auth/presentation/blocs/auth_bloc/bloc/auth_bloc.dart';
 import 'package:kz_h/src/features/auth/presentation/widgets/auth_input_field.dart';
 import 'package:kz_h/src/features/auth/presentation/widgets/my_filled_button.dart';
@@ -62,10 +63,7 @@ class _RegisterPageState extends State<RegisterPage> {
             context.router.pushNamed('/main');
           }
         } else if (state is AuthError) {
-          BotToast.showText(
-              contentColor: Colors.red,
-              text: state.message,
-              textStyle: TextStyle(fontSize: 16.sp));
+         showError(state.message);
         }
       },
       child: Scaffold(
