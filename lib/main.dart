@@ -8,6 +8,7 @@ import 'package:kz_h/injection_container.dart' as di;
 import 'package:kz_h/src/core/routes/app_router.dart';
 import 'package:kz_h/src/core/themes/themes.dart';
 import 'package:kz_h/src/features/auth/presentation/blocs/auth_bloc/bloc/auth_bloc.dart';
+import 'package:kz_h/src/features/home_feed/presentation/blocs/fire_counter/fire_counter_bloc.dart';
 import 'package:kz_h/src/features/home_feed/presentation/blocs/mistakes/mistake_bloc.dart';
 import 'package:kz_h/src/features/home_feed/presentation/blocs/question/question_bloc.dart';
 
@@ -18,6 +19,7 @@ void main() {
     BlocProvider(create: (_) => di.sl<QuestionBloc>()),
     BlocProvider(create: (_) => di.sl<MistakeBloc>()),
     BlocProvider(create: (_) => di.sl<AuthBloc>()),
+    BlocProvider(create: (_)=> di.sl<FireCounterBloc>())
   ], child: MyApp(appRouter: di.sl<AppRouter>())));
 
 }
