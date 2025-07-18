@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:kz_h/src/core/routes/app_router.gr.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
 
@@ -48,7 +47,6 @@ class BottomNavigationBarPage extends StatelessWidget {
     required bool isActive,
   }) {
     return BottomNavigationBarItem(
-      
       icon: Padding(
         padding: EdgeInsets.only(top: 10.h),
         child: SvgIconViewer(

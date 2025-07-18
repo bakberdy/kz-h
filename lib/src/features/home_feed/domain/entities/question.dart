@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:kz_h/src/features/home_feed/domain/entities/topic.dart';
-import 'package:kz_h/src/features/home_feed/domain/entities/variant.dart';
 
 class Question extends Equatable {
   final String questionId;
@@ -12,14 +11,13 @@ class Question extends Equatable {
 
   const Question(
       {this.topicName,
-      this.mistakeQuestionId, 
+      this.mistakeQuestionId,
       required this.questionId,
       required this.question,
       required this.topicIds,
       required this.variants});
 
   @override
-  // TODO: implement props
   List<Object?> get props => [questionId];
 
   // Map<String, dynamic> toMap() {

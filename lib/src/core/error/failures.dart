@@ -1,37 +1,46 @@
 import 'package:equatable/equatable.dart';
 
 abstract class Failure extends Equatable {
-  final String message;
+  String get message;
 
-  Failure([this.message = 'Failed']);
+  const Failure();
 }
 
 class ServerFailure extends Failure {
-  final String message;
-
-  ServerFailure([this.message = 'Server error']);
+  final String _message;
   @override
-  List<Object?> get props => [];
+  String get message => _message;
+
+  const ServerFailure([this._message = 'Server error']);
+  @override
+  List<Object?> get props => [_message];
 }
 
 class NetworkFailure extends Failure {
-  final String message;
-
-  NetworkFailure([this.message = 'Network connection error']);
+  final String _message;
   @override
-  List<Object?> get props => [];
+  String get message => _message;
+
+  const NetworkFailure([this._message = 'Network connection error']);
+  @override
+  List<Object?> get props => [message];
 }
 
 class CacheFailure extends Failure {
-  final String message;
-  CacheFailure([this.message = 'Cache error']);
+  final String _message;
   @override
-  List<Object?> get props => [];
+  String get message => _message;
+  const CacheFailure([this._message = 'Cache error']);
+  @override
+  List<Object?> get props => [_message];
 }
 
 class AuthFailure extends Failure {
-  final String message;
-  AuthFailure([this.message = 'Auth error']);
+  final String _message;
   @override
-  List<Object?> get props => [];
+  String get message => _message;
+
+  const AuthFailure([this._message = 'Auth error']);
+  @override
+  List<Object?> get props => [_message];
 }

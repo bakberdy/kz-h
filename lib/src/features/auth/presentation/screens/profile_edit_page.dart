@@ -29,7 +29,7 @@ class ProfileEditPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           flexibleSpace: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.transparent, // Фиксированный цвет
             ),
           ),
@@ -52,7 +52,7 @@ class ProfileEditPage extends StatelessWidget {
           child: SingleChildScrollView(
             child: BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
-                final userInfo = state is Authenticated?state.user:null;
+                final userInfo = state is Authenticated ? state.user : null;
                 return Column(
                   children: [
                     Container(
@@ -69,14 +69,26 @@ class ProfileEditPage extends StatelessWidget {
                       onTap: () {},
                     ),
                     const SizedBox(height: 20),
-                     EditInputField(
-                        secondaryColor: secondaryColor, label: 'Username',hintText: userInfo?.username,),
-                     EditInputField(
-                        secondaryColor: secondaryColor, label: 'First name', hintText: userInfo?.fullName?.split(" ")[0],),
-                     EditInputField(
-                        secondaryColor: secondaryColor, label: 'Last name', hintText: userInfo?.fullName?.split(" ")[1],),
-                     EditInputField(
-                        secondaryColor: secondaryColor, label: 'Email', hintText: userInfo?.email,),
+                    EditInputField(
+                      secondaryColor: secondaryColor,
+                      label: 'Username',
+                      hintText: userInfo?.username,
+                    ),
+                    EditInputField(
+                      secondaryColor: secondaryColor,
+                      label: 'First name',
+                      hintText: userInfo?.fullName?.split(" ")[0],
+                    ),
+                    EditInputField(
+                      secondaryColor: secondaryColor,
+                      label: 'Last name',
+                      hintText: userInfo?.fullName?.split(" ")[1],
+                    ),
+                    EditInputField(
+                      secondaryColor: secondaryColor,
+                      label: 'Email',
+                      hintText: userInfo?.email,
+                    ),
                     Row(
                       children: [
                         Text('Email not verified.',
@@ -84,8 +96,8 @@ class ProfileEditPage extends StatelessWidget {
                               fontSize: 10,
                               color: AppColors.secondaryTextColor,
                             )),
-                        SizedBox(width: 3),
-                        Text('Verify now',
+                        const SizedBox(width: 3),
+                        const Text('Verify now',
                             style: TextStyle(
                               decorationColor: Color(0xff5348F2),
                               decoration: TextDecoration.underline,
@@ -94,7 +106,7 @@ class ProfileEditPage extends StatelessWidget {
                             )),
                       ],
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: SaveChangesButton(
@@ -103,9 +115,9 @@ class ProfileEditPage extends StatelessWidget {
                         isEnabled: true,
                       ),
                     ),
-                    SizedBox(height: 8),
-                    Divider(thickness: 1, color: Color(0xff91898C)),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 8),
+                    const Divider(thickness: 1, color: Color(0xff91898C)),
+                    const SizedBox(height: 5),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,9 +131,9 @@ class ProfileEditPage extends StatelessWidget {
                             onTap: () {})
                       ],
                     ),
-                    SizedBox(height: 5),
-                    Divider(thickness: 1, color: Color(0xff91898C)),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
+                    const Divider(thickness: 1, color: Color(0xff91898C)),
+                    const SizedBox(height: 5),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -172,8 +184,8 @@ class SaveChangesButton extends StatelessWidget {
               shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5))),
               backgroundColor: WidgetStatePropertyAll(isEnabled
-                  ? Color(0xff3DBA60)
-                  : Color.fromARGB(255, 2, 51, 5))),
+                  ? const Color(0xff3DBA60)
+                  : const Color.fromARGB(255, 2, 51, 5))),
           onPressed: isEnabled ? onTap : null,
           child: Text('SAVE CHANGES',
               style: themeData.textTheme.bodySmall?.copyWith(

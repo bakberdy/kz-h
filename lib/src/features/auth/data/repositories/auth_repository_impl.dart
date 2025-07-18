@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:kz_h/src/core/error/exceptions.dart';
 import 'package:kz_h/src/core/error/failures.dart';
@@ -22,8 +24,8 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, User>> getUserInfo() async {
     return await _handleError(() async {
       final accessToken = await authLocalDataSource.getAccessToken();
-      print(accessToken);
-      if(accessToken==null) throw AuthException('Unauthorized');
+      log(accessToken ?? 'null', name: 'AuthRepositoryImpl.getUserInfo');
+      if (accessToken == null) throw AuthException('Unauthorized');
       final User user =
           await authRemoteDataSource.getUserInfo(accessToken: accessToken);
       return user;
@@ -44,8 +46,6 @@ class AuthRepositoryImpl implements AuthRepository {
       return user;
     });
   }
-
-  
 
   @override
   Future<Either<Failure, User>> register(
@@ -73,7 +73,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, void>> logOut() async {
     return await _handleError(() async {
       await authRemoteDataSource.logOut(
-          accessToken: await authLocalDataSource.getAccessToken()??'');
+          accessToken: await authLocalDataSource.getAccessToken() ?? '');
       await authLocalDataSource.deleteAllTokens();
       return;
     });

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kz_h/src/core/usecase/usecase.dart';
@@ -30,7 +32,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         usernameOrEmail: event.emailOrUsername,
         password: event.password,
       ));
-      
 
       //await Future.delayed(const Duration(seconds: 10));
 
@@ -92,7 +93,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(UnAuthenticated());
         },
         (success) {
-          print('Current user $success');
+          log('Current user $success', name: 'AuthBloc');
           emit(Authenticated(user: success));
         },
       );

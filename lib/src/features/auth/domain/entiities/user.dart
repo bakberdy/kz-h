@@ -32,9 +32,7 @@ class User with _$User {
     @Default(0) int answeredQuestionsCount,
     @Default(0) int score,
     @Default(0) double accuracy,
-    @JsonKey(fromJson: _fromJsonDate, toJson: _toJsonDate)
-    DateTime? joinedDate,
-    
+    @JsonKey(fromJson: _fromJsonDate, toJson: _toJsonDate) DateTime? joinedDate,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

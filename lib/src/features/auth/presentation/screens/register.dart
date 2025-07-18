@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -63,7 +62,7 @@ class _RegisterPageState extends State<RegisterPage> {
             context.router.pushNamed('/main');
           }
         } else if (state is AuthError) {
-         showError(state.message);
+          showError(state.message);
         }
       },
       child: Scaffold(
@@ -93,7 +92,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               SizedBox(
                                 height: 172.h,
                               ),
-                              SvgPicture.asset('lib/assets/images/kzh_logo.svg'),
+                              SvgPicture.asset(
+                                  'lib/assets/images/kzh_logo.svg'),
                               SizedBox(
                                 height: 5.h,
                               ),
@@ -126,11 +126,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                     hintText: S.of(context).email,
                                     validator: (value) {
                                       final validator = Validator(validators: [
-                                         RequiredValidator(),
+                                        const RequiredValidator(),
                                         const EmailValidator()
                                       ]);
                                       return validator.validate(
-                                          label: S.of(context).email, value: value);
+                                          label: S.of(context).email,
+                                          value: value);
                                     },
                                   ),
                                 ),
@@ -193,7 +194,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               ],
                             ),
                           ),
-                          SizedBox(height: 150.h,)
+                          SizedBox(
+                            height: 150.h,
+                          )
                         ],
                       )),
                 ),
@@ -215,7 +218,11 @@ class _RegisterPageState extends State<RegisterPage> {
                             onTap: () {
                               context.router.maybePop();
                             },
-                            child: SizedBox(height: 40, width: 60,child: Image.asset('lib/assets/icons/back.png'))));
+                            child: SizedBox(
+                                height: 40,
+                                width: 60,
+                                child:
+                                    Image.asset('lib/assets/icons/back.png'))));
               }),
             ],
           ),

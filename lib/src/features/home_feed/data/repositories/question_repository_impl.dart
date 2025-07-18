@@ -20,52 +20,51 @@ class QuestionRepositoryImpl implements QuestionRepository {
 
   @override
   Future<Either<Failure, List<Question>>> getQuestions() async {
-      try {
-        final List<QuestionModel> questions =
-            await questionRemoteDataSource.getQuestions();
-        // print('repa impl ${questions.first.question}');
-        return Right(questions);
-      } catch (e) {
-        return Left(ServerFailure());
-      }
-    } 
-  
+    try {
+      final List<QuestionModel> questions =
+          await questionRemoteDataSource.getQuestions();
+      // print('repa impl ${questions.first.question}');
+      return Right(questions);
+    } catch (e) {
+      return const Left(ServerFailure());
+    }
+  }
 
   @override
   Future<Either<Failure, List<Variant>>> answerToQuestion(
       String quesitonId, String selectedOption) async {
-      try {
-        return Right(await questionRemoteDataSource.answerToQuestion(
-            quesitonId, selectedOption));
-      } catch (e) {
-        return Left(ServerFailure());
-      }
+    try {
+      return Right(await questionRemoteDataSource.answerToQuestion(
+          quesitonId, selectedOption));
+    } catch (e) {
+      return const Left(ServerFailure());
+    }
   }
 
   @override
   Future<Either<Failure, List<Variant>>> answerToMistake(
       String quesitonId, String selectedOption) async {
-      try {
-        return Right(await questionRemoteDataSource.answerToMistake(
-            quesitonId, selectedOption));
-      } catch (e) {
-        return Left(ServerFailure());
-      }
+    try {
+      return Right(await questionRemoteDataSource.answerToMistake(
+          quesitonId, selectedOption));
+    } catch (e) {
+      return const Left(ServerFailure());
+    }
   }
 
   @override
   Future<Either<Failure, List<Question>>> getMistakes() async {
-      try {
-        final List<QuestionModel> questions =
-            await questionRemoteDataSource.getMistakes();
-        return Right(questions);
-      } catch (e) {
-        if(e is AuthException){
-          return Left(AuthFailure(e.message));
-        }else if(e is ServerException){
-          return Left(ServerFailure(e.message));
-        }
-        return Left(ServerFailure('Unknown error'));
+    try {
+      final List<QuestionModel> questions =
+          await questionRemoteDataSource.getMistakes();
+      return Right(questions);
+    } catch (e) {
+      if (e is AuthException) {
+        return Left(AuthFailure(e.message));
+      } else if (e is ServerException) {
+        return Left(ServerFailure(e.message));
       }
+      return const Left(ServerFailure('Unknown error'));
+    }
   }
 }

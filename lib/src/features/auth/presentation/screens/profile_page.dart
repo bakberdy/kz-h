@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kz_h/generated/l10n.dart';
-import 'package:kz_h/src/core/routes/app_router.gr.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
 import 'package:kz_h/src/core/utils/utils.dart';
 import 'package:kz_h/src/core/widgets/welcome_widget.dart';
@@ -47,7 +46,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Image.asset(
                             fit: BoxFit.cover,
                             'lib/assets/images/aaa.jpg',
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withAlpha((0.5 * 255).round()),
                             colorBlendMode: BlendMode.darken,
                           )),
                       SizedBox(
@@ -60,18 +59,17 @@ class _ProfilePageState extends State<ProfilePage> {
                           top: 20.h,
                           right: 20.w,
                           child: InkWell(
-                            highlightColor: Colors.transparent,
-                            hoverColor: Colors.transparent,
-                            focusColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              focusColor: Colors.transparent,
                               onTap: () {
-                                context.router
-                                    .pushNamed('/settings');
+                                context.router.pushNamed('/settings');
                               },
-                              child:
-                                  SizedBox(
-                                    height: 40,
-                                    width: 40,
-                                    child: Image.asset('lib/assets/icons/settings.png'))))
+                              child: SizedBox(
+                                  height: 40,
+                                  width: 40,
+                                  child: Image.asset(
+                                      'lib/assets/icons/settings.png'))))
                     ],
                   ),
                   BlocConsumer<AuthBloc, AuthState>(
@@ -192,4 +190,3 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
-

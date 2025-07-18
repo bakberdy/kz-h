@@ -1,11 +1,9 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
-import 'package:kz_h/src/core/utils/show_accept_to_back_dialog.dart';
 import 'package:kz_h/src/core/utils/show_error.dart';
 import 'package:kz_h/src/core/widgets/my_outlined_button.dart';
 import 'package:kz_h/src/features/auth/presentation/blocs/auth_bloc/bloc/auth_bloc.dart';
@@ -16,8 +14,6 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
-
     return PopScope(
       child: Scaffold(
         appBar: AppBar(
@@ -36,7 +32,7 @@ class SettingsPage extends StatelessWidget {
         ),
         body: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
-            if(state is AuthError){
+            if (state is AuthError) {
               showError(state.message);
             }
           },

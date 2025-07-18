@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:kz_h/src/core/dio/dio_client.dart';
 import 'package:kz_h/src/core/utils/get_device_info.dart';
@@ -27,33 +26,31 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl({required this.dioClient});
 
   @override
-Future<AuthInfo> login({
-  required String emailOrUsername,
-  required String password,
-}) async {
+  Future<AuthInfo> login({
+    required String emailOrUsername,
+    required String password,
+  }) async {
+    try {
+      final deviceInfo = await getDeviceInfo();
 
-  try {
-    final deviceInfo = await getDeviceInfo();
+      final response = await dioClient.post(
+        headers: {'User-agent': deviceInfo},
+        '/auth/login',
+        data: {
+          "emailOrUsername": emailOrUsername,
+          "password": password,
+        },
+      );
 
-    final response = await dioClient.post(
-      headers: {'User-agent': deviceInfo},
-      '/auth/login',
-      data: {
-        "emailOrUsername": emailOrUsername,
-        "password": password,
-      },
-    );
+      final data = response.data as Map<String, dynamic>;
+      final String accessToken = data['access_token'] as String;
+      final String refreshToken = data['refresh_token'] as String;
 
-    final data = response.data as Map<String, dynamic>;
-    final String accessToken = data['access_token'] as String;
-    final String refreshToken = data['refresh_token'] as String;
-
-
-    return AuthInfo(refreshToken: refreshToken, accessToken: accessToken);
-  } catch (e) {
-    rethrow; 
+      return AuthInfo(refreshToken: refreshToken, accessToken: accessToken);
+    } catch (e) {
+      rethrow;
+    }
   }
-}
 
   @override
   Future<AuthInfo> refresh({required String refreshToken}) async {
@@ -92,9 +89,10 @@ Future<AuthInfo> login({
         .get('/auth/me', headers: {"Authorization": 'Bearer $accessToken'});
     return User.fromJson(response.data as Map<String, dynamic>);
   }
-  
+
   @override
-  Future<void> logOut({required String accessToken}) async{
-   await dioClient.get('/auth/logout', headers: {"Authorization": 'Bearer $accessToken'});
+  Future<void> logOut({required String accessToken}) async {
+    await dioClient
+        .get('/auth/logout', headers: {"Authorization": 'Bearer $accessToken'});
   }
 }

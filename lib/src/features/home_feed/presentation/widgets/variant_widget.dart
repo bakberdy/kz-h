@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kz_h/src/core/themes/colors.dart';
+import 'package:kz_h/src/features/home_feed/domain/entities/variant.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-
-import '../../domain/entities/variant.dart';
-import '../blocs/variant/variant_bloc.dart';
 
 class VariantWidget extends StatelessWidget {
   const VariantWidget({

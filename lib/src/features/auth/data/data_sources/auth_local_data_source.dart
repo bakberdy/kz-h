@@ -1,5 +1,4 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:kz_h/src/core/error/exceptions.dart';
 
 abstract interface class AuthLocalDataSource {
   Future<void> saveAccessToken(String accessToken);
@@ -9,7 +8,9 @@ abstract interface class AuthLocalDataSource {
   Future<void> deleteAllTokens();
 }
 
+// ignore: constant_identifier_names
 const ACCESS_TOKEN = 'accessToken';
+// ignore: constant_identifier_names
 const REFRESH_TOKEN = 'refreshToken';
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {

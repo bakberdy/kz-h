@@ -3,12 +3,12 @@ import 'package:kz_h/src/features/home_feed/presentation/widgets/variant_widget.
 import '../../domain/entities/variant.dart';
 
 class VariantModel extends Variant {
-  const VariantModel({required super.text, super.questionState, super.isCorrect});
+  const VariantModel(
+      {required super.text, super.questionState, super.isCorrect});
 
   VariantModel copyWith({
     String? text,
     QuestionStateEnum? questionState,
-
   }) {
     return VariantModel(
       text: text ?? this.text,
@@ -20,15 +20,15 @@ class VariantModel extends Variant {
     return VariantModel(
       isCorrect: json['correct'],
       text: json['text'] as String,
-      questionState: (json['correct'] == null)||(!(json['selected'] as bool))
+      questionState: (json['correct'] == null) || (!(json['selected'] as bool))
           ? QuestionStateEnum.notSelected
           : (json['correct'] as bool)
               ? QuestionStateEnum.correct
               : QuestionStateEnum.inccorrect,
     );
   }
-
-  String toString(){
+  @override
+  String toString() {
     return 'Variant $text, state: $questionState';
   }
 
