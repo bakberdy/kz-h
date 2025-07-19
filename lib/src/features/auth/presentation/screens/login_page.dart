@@ -55,138 +55,132 @@ class _LoginPageState extends State<LoginPage> {
         }
       },
       child: Scaffold(
-        body: SafeArea(
-          child: Stack(
-            children: [
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: SingleChildScrollView(
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    return Container(
-                        width: constraints.maxWidth,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage(
-                                'lib/assets/images/splash-bg.png',
-                              )),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Column(
+        body: Stack(
+          children: [
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: SingleChildScrollView(
+                child: LayoutBuilder(builder: (context, constraints) {
+                  return Container(
+                      width: constraints.maxWidth,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                              'lib/assets/images/splash-bg.png',
+                            )),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Column(
+                            children: [
+                              SizedBox(
+                                height: 172.h,
+                              ),
+                              SvgPicture.asset(
+                                  'lib/assets/images/kzh_logo.svg'),
+                              SizedBox(
+                                height: 5.h,
+                              ),
+                              Text(S.of(context).login.toUpperCase(),
+                                  style: themeData.textTheme.bodyMedium
+                                      ?.copyWith(color: Colors.white))
+                            ],
+                          ),
+                          SizedBox(height: 25.h),
+                          Form(
+                            key: _formKey,
+                            child: Column(
                               children: [
                                 SizedBox(
-                                  height: 172.h,
+                                  width: 354.w,
+                                  child: AuthInputField(
+                                    controller: usernameOrEmailController,
+                                    hintText: S.of(context).usernameOrEmail,
+                                    validator: (value) {
+                                      final validator = Validator(validators: [
+                                        const RequiredValidator(),
+                                        //  const EmailValidator()
+                                      ]);
+                                      return validator.validate(
+                                          label: S.of(context).usernameOrEmail,
+                                          value: value);
+                                    },
+                                  ),
                                 ),
-                                SvgPicture.asset(
-                                    'lib/assets/images/kzh_logo.svg'),
                                 SizedBox(
-                                  height: 5.h,
+                                  height: 10.h,
                                 ),
-                                Text(S.of(context).login.toUpperCase(),
-                                    style: themeData.textTheme.bodyMedium
-                                        ?.copyWith(color: Colors.white))
+                                SizedBox(
+                                  width: 354.w,
+                                  child: AuthInputField(
+                                    controller: passwordController,
+                                    obscuredText: true,
+                                    hintText: S.of(context).password,
+                                    validator: (value) {
+                                      final validator = Validator(validators: [
+                                        const MinLengthValidator(length: 6),
+                                        const RequiredValidator(),
+                                      ]);
+                                      return validator.validate(
+                                          label: 'Password', value: value);
+                                    },
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 30.h,
+                                ),
+                                SizedBox(
+                                  height: 60.h,
+                                  width: 354.w,
+                                  child: MyFilledButton(
+                                      text: S.of(context).login,
+                                      onPressed: () async {
+                                        if (_formKey.currentState?.validate() ??
+                                            false) {
+                                          await submit();
+                                        }
+                                      },
+                                      bgColor: AppColors.bluePurpleColor),
+                                ),
+                                const SizedBox(
+                                  height: 400,
+                                )
                               ],
                             ),
-                            SizedBox(height: 25.h),
-                            Form(
-                              key: _formKey,
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    width: 354.w,
-                                    child: AuthInputField(
-                                      controller: usernameOrEmailController,
-                                      hintText: S.of(context).usernameOrEmail,
-                                      validator: (value) {
-                                        final validator =
-                                            Validator(validators: [
-                                          const RequiredValidator(),
-                                          //  const EmailValidator()
-                                        ]);
-                                        return validator.validate(
-                                            label:
-                                                S.of(context).usernameOrEmail,
-                                            value: value);
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10.h,
-                                  ),
-                                  SizedBox(
-                                    width: 354.w,
-                                    child: AuthInputField(
-                                      controller: passwordController,
-                                      obscuredText: true,
-                                      hintText: S.of(context).password,
-                                      validator: (value) {
-                                        final validator =
-                                            Validator(validators: [
-                                          const MinLengthValidator(length: 6),
-                                          const RequiredValidator(),
-                                        ]);
-                                        return validator.validate(
-                                            label: 'Password', value: value);
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 30.h,
-                                  ),
-                                  SizedBox(
-                                    height: 60.h,
-                                    width: 354.w,
-                                    child: MyFilledButton(
-                                        text: S.of(context).login,
-                                        onPressed: () async {
-                                          if (_formKey.currentState
-                                                  ?.validate() ??
-                                              false) {
-                                            await submit();
-                                          }
-                                        },
-                                        bgColor: AppColors.bluePurpleColor),
-                                  ),
-                                  const SizedBox(
-                                    height: 400,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ));
-                  }),
-                ),
+                          ),
+                        ],
+                      ));
+                }),
               ),
-              BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-                return (state is AuthLoading)
-                    ? Positioned(
-                        child: Container(
-                        color: Colors.black.withValues(alpha: 0.7),
-                        child: Center(
-                          child: LoadingAnimationWidget.fourRotatingDots(
-                              size: 60.sp, color: AppColors.bluePurpleColor),
-                        ),
-                      ))
-                    : Positioned(
-                        left: 16.w,
-                        top: 25.h,
-                        child: GestureDetector(
-                            onTap: () {
-                              context.router.maybePop();
-                            },
-                            child: SizedBox(
-                                height: 40,
-                                width: 60,
-                                child:
-                                    Image.asset('lib/assets/icons/back.png'))));
-              }),
-            ],
-          ),
+            ),
+            BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+              return (state is AuthLoading)
+                  ? Positioned(
+                      child: Container(
+                      color: Colors.black.withValues(alpha: 0.7),
+                      child: Center(
+                        child: LoadingAnimationWidget.fourRotatingDots(
+                            size: 60.sp, color: AppColors.bluePurpleColor),
+                      ),
+                    ))
+                  : Positioned(
+                      left: 16.w,
+                      top: 60.h,
+                      child: GestureDetector(
+                          onTap: () {
+                            context.router.maybePop();
+                          },
+                          child: SizedBox(
+                              height: 40,
+                              width: 60,
+                              child:
+                                  Image.asset('lib/assets/icons/back.png'))));
+            }),
+          ],
         ),
       ),
     );
